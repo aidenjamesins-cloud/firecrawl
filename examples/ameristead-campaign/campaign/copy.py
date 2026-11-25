@@ -80,12 +80,12 @@ def footer(s: Settings) -> str:
     return (
         '<hr><p style="font-size:12px;color:#666">'
         f"This is an advertisement for health insurance from {html.escape(s.agency_name)}. "
-        f"{html.escape(s.agent_license_line)}. "
+        + (f"{html.escape(s.agent_license_line)}. " if s.agent_license_line else "") +
         "Plan benefits shown are in-network summaries for the 2026 plan year and are subject to change. "
         "The Schedule of Benefits and plan documents govern. Availability and rates vary and are subject to "
         "eligibility and carrier approval. Not affiliated with or endorsed by any government agency. "
-        "[CARRIER-REQUIRED DISCLAIMER IF ANY]<br>"
-        f"{html.escape(s.agency_address)}<br>"
+        + (f"{html.escape(s.carrier_disclaimer)}" if s.carrier_disclaimer else "") + "<br>"
+        + (f"{html.escape(s.agency_address)}<br>" if s.agency_address else "") +
         "You are receiving this because your business contact information is publicly listed. "
         '<a href="*|UNSUB|*">Unsubscribe</a> and you will not hear from us again.</p>'
     )
@@ -122,8 +122,9 @@ def build_sequence(niche: str, pain_points: list[dict], s: Settings, plans: dict
     tax = _pp(pain_points, "tax_strategy")
     alt = _pp(pain_points, "ichra_alternatives")
     deadline = _pp(pain_points, "open_enrollment_deadline")
-    brochure = f'<a href="{s.brochure_url}">See the plan flyer</a>'
-    book = f'<a href="{s.booking_url}">Grab 15 minutes on my calendar</a>'
+    brochure = (f'<a href="{s.brochure_url}">See the plan flyer</a>' if s.brochure_url
+                else f'<a href="{s.booking_url}">Book a time to see the plans</a>')
+    book = f'<a href="{s.booking_url}">Grab a time on my calendar</a>'
     sign = f"{html.escape(s.from_name.split('|')[0].strip())}<br>{html.escape(s.agency_name)}"
     price_line = (f" Employee-only coverage starts at ${cheapest['premiums']['employee']:,}/month on the {cheapest['name']} plan."
                   if s.include_premiums else "")

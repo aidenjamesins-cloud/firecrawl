@@ -27,8 +27,8 @@ class Settings:
     mailchimp_api_key: str = ""
     mailchimp_audience_id: str = ""
     mailchimp_server_prefix: str = ""
-    from_name: str = "[SENDER NAME]"
-    reply_to: str = "[REPLY-TO ADDRESS]"
+    from_name: str = "Ana | James Insurance Advisory"
+    reply_to: str = ""
     dnc_csv_path: str = ""
     scrub_cleared_csv_path: str = ""
     litigator_csv_path: str = ""
@@ -37,12 +37,13 @@ class Settings:
     scrub_api_key: str = ""
     require_phone_for_dnc_check: bool = True
     dnc_scrub: str = "internal"  # "internal" or "external" (done by your team after export)
-    agency_name: str = "[AMERISTEAD AGENCY LEGAL NAME]"
-    agency_address: str = "[PHYSICAL MAILING ADDRESS]"
-    agent_license_line: str = "[AGENT NAME], licensed in [STATES], License # [NUMBER]"
+    agency_name: str = "James Insurance Advisory"
+    carrier_disclaimer: str = ""
+    agency_address: str = ""
+    agent_license_line: str = ""
     licensed_states: list[str] = field(default_factory=list)
-    brochure_url: str = "[BROCHURE PDF LINK]"
-    booking_url: str = "[CALENDAR LINK]"
+    brochure_url: str = ""
+    booking_url: str = "https://calendly.com/aidenjameshealth/free-health-coverage-consultation-clone-1"
     include_premiums: bool = False
 
     @classmethod
@@ -66,6 +67,7 @@ class Settings:
             require_phone_for_dnc_check=_env("REQUIRE_PHONE_FOR_DNC_CHECK", "true").lower() != "false",
             agency_name=_env("AGENCY_NAME", d.agency_name),
             agency_address=_env("AGENCY_ADDRESS", d.agency_address),
+            carrier_disclaimer=_env("CARRIER_DISCLAIMER"),
             agent_license_line=_env("AGENT_LICENSE_LINE", d.agent_license_line),
             licensed_states=[s.strip().upper() for s in _env("LICENSED_STATES").split(",") if s.strip()],
             brochure_url=_env("BROCHURE_URL", d.brochure_url),
@@ -74,9 +76,5 @@ class Settings:
         )
 
     def unfilled_placeholders(self) -> list[str]:
-        names = ["from_name", "reply_to", "agency_name", "agency_address",
-                 "agent_license_line", "brochure_url", "booking_url"]
-        missing = [n for n in names if "[" in getattr(self, n)]
-        if not self.licensed_states:
-            missing.append("licensed_states")
-        return missing
+        names = ["from_name", "agency_name", "agency_address", "brochure_url", "booking_url"]
+        return [n for n in names if "[" in getattr(self, n)]

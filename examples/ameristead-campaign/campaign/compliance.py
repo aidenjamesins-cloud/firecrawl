@@ -2,7 +2,7 @@
 
 A prospect is kept only if ALL of these hold:
   * not on the suppression list (unsubscribes, bounces, complaints, do-not-contact)
-  * the state is one the agent is licensed in (when LICENSED_STATES is set; else excluded)
+  * the state is in LICENSED_STATES, when that is set (no state filter when empty)
   * at least one scrub provider is configured, and every provider returns "clear"
     for both DNC and litigator status
   * a phone number exists to check against DNC, unless REQUIRE_PHONE_FOR_DNC_CHECK=false
@@ -153,9 +153,7 @@ class ComplianceFilter:
         domain = email.split("@")[-1]
         if email in self.suppression or f"@{domain}" in self.suppression:
             return "suppression list"
-        if not self.licensed_states:
-            return "no licensed states configured"
-        if p.state.upper() not in self.licensed_states:
+        if self.licensed_states and p.state.upper() not in self.licensed_states:
             return f"not licensed in {p.state or 'unknown state'}"
         if self.external_scrub:
             return None

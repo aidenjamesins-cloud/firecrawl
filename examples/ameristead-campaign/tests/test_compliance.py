@@ -49,7 +49,7 @@ def test_suppression_and_domain_suppression():
 
 def test_unlicensed_state_excluded():
     assert "not licensed" in F([Fixed(False, False)]).reason_to_exclude(P(state="CA"))
-    assert "no licensed states" in F([Fixed(False, False)], states=[]).reason_to_exclude(P())
+    assert F([Fixed(False, False)], states=[]).reason_to_exclude(P(state="CA")) is None
 
 
 def test_csv_provider(tmp_path):
