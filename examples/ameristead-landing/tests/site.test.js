@@ -22,3 +22,13 @@ test("consent boxes start unchecked and premiums start hidden", () => {
   for (const m of html.matchAll(/<input type="checkbox"[^>]*>/g)) assert.doesNotMatch(m[0], /checked/);
   assert.match(read("../public/config.js"), /showPremiums: false/);
 });
+
+test("Bright Life plans are complete and in-network figures only", () => {
+  const src = read("../public/plans-brightlife.js");
+  const data = JSON.parse(src.slice(src.indexOf("=") + 1).trim().replace(/;$/, ""));
+  assert.equal(data.plans.length, 8);
+  const fields = ["name", "deductible", "coinsurance", "max_oop", "preventive_care", "telehealth", "primary_care", "specialist", "urgent_care", "rx"];
+  for (const p of data.plans) for (const f of fields) assert.ok(p[f], `${p.name} missing ${f}`);
+  assert.equal(data.plans.filter((p) => p.hsa).length, 2);
+  assert.ok(!src.includes("premiums"), "Bright Life premiums are not published on the site");
+});

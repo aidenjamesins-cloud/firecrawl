@@ -31,14 +31,31 @@
   if (inc.deliverUrl) $("#guide-link").href = inc.deliverUrl;
 
   /* ---------- Plans: hero card + table ---------- */
-  var order = ["HSA 9000", "Bronze", "HSA 6000", "Silver", "Gold", "Platinum", "Diamond"];
-  var plans = order.map(function (n) { return D.plans.filter(function (p) { return p.name === n; })[0]; }).filter(Boolean);
+  // Two plan families on the Cigna PPO network, normalized to one shape.
+  var A = window.PLAN_DATA || { plans: [] }, B = window.PLAN_DATA_BRIGHTLIFE || { plans: [] };
+  var aOrder = ["HSA 9000", "Bronze", "HSA 6000", "Silver", "Gold", "Platinum", "Diamond"];
+  var FAMILIES = [
+    { key: "ameristead", label: "Ameristead Health", plans: aOrder.map(function (n) { return A.plans.filter(function (p) { return p.name === n; })[0]; }).filter(Boolean).map(function (p) {
+      return { name: p.name, family: "Ameristead Health", hsa: p.hsa, deductible: p.deductible, coinsurance: p.coinsurance, max_oop: p.max_oop,
+        preventive_care: A.common ? A.common.preventive_care : "$0", telehealth: A.common ? A.common.teledoctor : "$0",
+        primary_care: p.primary_care, specialist: p.specialist, urgent_care: p.urgent_care, rx: p.rx, premiums: p.premiums };
+    }) },
+    { key: "brightlife", label: "Bright Life", plans: B.plans.map(function (p) { var o = {}; for (var k in p) o[k] = p[k]; o.family = "Bright Life"; return o; }) }
+  ];
   var slash = function (s) { return String(s).replace("/", " / "); };
   var money = function (n) { return "$" + Number(n).toLocaleString("en-US"); };
+  var dedNum = function (p) { return Number(String(p.deductible).split("/")[0].replace(/[^\d]/g, "")) || 0; };
+  // Hero slider: every plan from both families, highest deductible to lowest.
+  var all = FAMILIES.reduce(function (acc, f) { return acc.concat(f.plans); }, []).sort(function (x, y) { return dedNum(y) - dedNum(x); });
 
   var slider = $("#plan-slider");
+  slider.max = String(all.length - 1);
+  var startIdx = all.map(function (p) { return p.name; }).indexOf("Gold");
+  slider.value = String(startIdx < 0 ? Math.floor(all.length / 2) : startIdx);
+  $$("[data-plan-count]").forEach(function (el) { el.textContent = String(all.length); });
   function showPlan(i) {
-    var p = plans[i]; if (!p) return;
+    var p = all[i]; if (!p) return;
+    $("#pc-family").textContent = p.family + " on the Cigna PPO network";
     $("#pc-name").textContent = p.name;
     $("#pc-hsa").hidden = !p.hsa;
     $("#pc-ded").textContent = slash(p.deductible);
@@ -46,43 +63,49 @@
     $("#pc-spec").textContent = p.specialist;
     $("#pc-rx").textContent = p.rx;
     $("#pc-oop").textContent = slash(p.max_oop);
+    $("#pc-tele").textContent = p.telehealth;
     var showPrem = C.showPremiums && p.premiums;
     $("#pc-prem-row").hidden = !showPrem;
     if (showPrem) $("#pc-prem").textContent = money(p.premiums.employee);
-    slider.setAttribute("aria-valuetext", p.name);
-    $$(".plan-table [data-col]").forEach(function (c) { c.classList.toggle("is-active", +c.getAttribute("data-col") === i); });
+    slider.setAttribute("aria-valuetext", p.family + " " + p.name);
   }
 
   var rows = [
     ["Deductible (ind / fam)", function (p) { return slash(p.deductible); }],
     ["Coinsurance", function (p) { return p.coinsurance; }],
     ["Out-of-pocket max", function (p) { return slash(p.max_oop); }],
-    ["Preventive care", function () { return D.common.preventive_care; }],
-    ["Teledoctor", function () { return D.common.teledoctor; }],
+    ["Preventive care", function (p) { return p.preventive_care; }],
+    ["Telehealth", function (p) { return p.telehealth; }],
     ["Primary care", function (p) { return p.primary_care; }],
     ["Specialist", function (p) { return p.specialist; }],
     ["Urgent care", function (p) { return p.urgent_care; }],
     ["Prescriptions", function (p) { return p.rx; }]
   ];
-  if (C.showPremiums) {
-    rows.push(["Employee only", function (p) { return money(p.premiums.employee); }]);
-    rows.push(["Employee + spouse", function (p) { return money(p.premiums.employee_spouse); }]);
-    rows.push(["Employee + children", function (p) { return money(p.premiums.employee_children); }]);
-    rows.push(["Family", function (p) { return money(p.premiums.family); }]);
+  var premRows = [["Employee only", "employee"], ["Employee + spouse", "employee_spouse"], ["Employee + children", "employee_children"], ["Family", "family"]];
+  var head = $("#pt-head"), body = $("#pt-body"), famTabs = $$("[data-family]");
+  function cell(tag, text) { var c = document.createElement(tag); c.textContent = text; return c; }
+  function renderTable(key) {
+    var fam = FAMILIES.filter(function (f) { return f.key === key; })[0] || FAMILIES[0];
+    var hr = document.createElement("tr"); var h0 = cell("th", "Plan"); h0.scope = "col"; hr.appendChild(h0);
+    fam.plans.forEach(function (p) {
+      var th = cell("th", p.name); th.scope = "col";
+      if (p.hsa) { var chip = cell("span", "HSA"); chip.className = "hsa-chip"; th.appendChild(chip); }
+      hr.appendChild(th);
+    });
+    head.replaceChildren(hr);
+    var rs = rows.slice();
+    if (C.showPremiums && fam.plans[0] && fam.plans[0].premiums) premRows.forEach(function (r) { rs.push([r[0], function (p) { return money(p.premiums[r[1]]); }]); });
+    body.replaceChildren.apply(body, rs.map(function (r) {
+      var tr = document.createElement("tr");
+      var th = cell("th", r[0]); th.scope = "row"; tr.appendChild(th);
+      fam.plans.forEach(function (p) { tr.appendChild(cell("td", r[1](p))); });
+      return tr;
+    }));
+    famTabs.forEach(function (t) { var on = t.getAttribute("data-family") === fam.key; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; });
+    $$("[data-family-note]").forEach(function (n) { n.hidden = n.getAttribute("data-family-note") !== fam.key; });
   }
-  var head = $("#pt-head"), body = $("#pt-body");
-  plans.forEach(function (p, i) {
-    var th = document.createElement("th"); th.scope = "col"; th.setAttribute("data-col", i);
-    th.textContent = p.name;
-    if (p.hsa) { var chip = document.createElement("span"); chip.className = "hsa-chip"; chip.textContent = "HSA"; th.appendChild(chip); }
-    head.appendChild(th);
-  });
-  rows.forEach(function (r) {
-    var tr = document.createElement("tr");
-    var th = document.createElement("th"); th.scope = "row"; th.textContent = r[0]; tr.appendChild(th);
-    plans.forEach(function (p, i) { var td = document.createElement("td"); td.setAttribute("data-col", i); td.textContent = r[1](p); tr.appendChild(td); });
-    body.appendChild(tr);
-  });
+  famTabs.forEach(function (t) { t.addEventListener("click", function () { renderTable(t.getAttribute("data-family")); }); });
+  renderTable("ameristead");
   slider.addEventListener("input", function () { showPlan(+slider.value); });
   showPlan(+slider.value);
 
@@ -90,7 +113,7 @@
   var WHO = {
     medspa: ["Med spas and aesthetics practices", "Injectors, estheticians and front desk staff compare benefits when they choose where to work. A Cigna PPO with no referrals and $0 teledoctor is easy to explain in an interview, and you pick the plan design that fits your margins.", "Get a quote for my med spa"],
     cpa: ["CPA and accounting firms", "You already know what employer-paid premiums do on a return. Pick between copay plans and HSA-eligible designs, and keep seasonal and year-round staff on one simple plan.", "Get a quote for my firm"],
-    advisor: ["Financial advisors and RIAs", "Pair an HSA 6000 or HSA 9000 with a health savings account for yourself, and offer your associates a recognizable PPO network that holds its own against larger firms.", "Get a quote for my practice"],
+    advisor: ["Financial advisors and RIAs", "Pair one of the four HSA-eligible plans with a health savings account for yourself, and offer your associates a recognizable PPO network that holds its own against larger firms.", "Get a quote for my practice"],
     realestate: ["Brokerages and real estate teams", "Agents and team leads who are self-employed can look at plans for just themselves, and brokers with staff can set up group coverage for the people on payroll.", "Get a quote for my team"],
     solo: ["The self-employed", "Earning too much for a marketplace subsidy doesn't have to mean a narrow network. Tell us it's just you and see what a business owner's PPO looks like.", "Get a quote for just me"]
   };

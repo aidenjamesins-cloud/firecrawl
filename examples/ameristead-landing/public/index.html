@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="config.js"></script>
   <script src="plans.js"></script>
+  <script src="plans-brightlife.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -40,7 +41,7 @@
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <h1>Health coverage that works as hard as you do.</h1>
-      <p class="lede">Cigna PPO plans for business owners, their teams and the self-employed. Seven plan designs, from a $0 deductible to HSA-eligible, with $0 preventive care and $0 teledoctor visits on every one.</p>
+      <p class="lede">Cigna PPO plans for business owners, their teams and the self-employed. Fifteen plan designs from two plan families, Ameristead Health and Bright Life: copay, major medical and HSA-eligible, from a $0 deductible up. Every one includes $0 in-network preventive care.</p>
       <div class="hero-ctas">
         <a class="btn" href="#quote">Get my free quote</a>
         <button class="btn btn-ghost" type="button" data-open-guide>Get the plan comparison guide</button>
@@ -56,7 +57,7 @@
       <article class="plan-card" aria-live="polite">
         <header class="plan-card-head">
           <div>
-            <p class="plan-network">Cigna PPO network</p>
+            <p class="plan-network" id="pc-family">Ameristead Health on the Cigna PPO network</p>
             <h2 class="plan-name" id="pc-name">Gold</h2>
           </div>
           <span class="plan-hsa" id="pc-hsa" hidden>HSA-eligible</span>
@@ -67,12 +68,13 @@
           <div><dt>Specialist</dt><dd id="pc-spec">$55</dd></div>
           <div><dt>Prescriptions</dt><dd id="pc-rx">$0/$35/$75</dd></div>
           <div><dt>Out-of-pocket max</dt><dd id="pc-oop">$8,700 / $17,400</dd></div>
+          <div><dt>Telehealth visits</dt><dd id="pc-tele">$0</dd></div>
           <div class="fig-prem" id="pc-prem-row" hidden><dt>Employee-only rate</dt><dd id="pc-prem"></dd></div>
         </dl>
-        <p class="plan-always">On every plan: $0 preventive care and $0 teledoctor</p>
+        <p class="plan-always">$0 in-network preventive care on every plan. No referrals to see a specialist.</p>
       </article>
       <div class="slider">
-        <label for="plan-slider">Slide to compare all seven plans</label>
+        <label for="plan-slider">Slide to compare all <span data-plan-count>15</span> plans</label>
         <input id="plan-slider" type="range" min="0" max="6" step="1" value="4" aria-valuetext="Gold">
         <div class="slider-ends" aria-hidden="true"><span>Higher deductible</span><span>Lower deductible</span></div>
       </div>
@@ -85,7 +87,7 @@
   <div class="wrap">
     <h2>If any of these sound familiar, it's worth a second look.</h2>
     <div class="why-list">
-      <div><h3>Your renewal went up again</h3><p>Small groups and individual policies have seen steep increases. Seven plan designs give you room to rebalance premium against deductible instead of just paying more.</p></div>
+      <div><h3>Your renewal went up again</h3><p>Small groups and individual policies have seen steep increases. Fifteen plan designs give you room to rebalance premium against deductible instead of just paying more.</p></div>
       <div><h3>You earn too much for a subsidy</h3><p>If marketplace help disappeared, you may be paying full price for a narrow network. Compare that against a PPO built for business owners.</p></div>
       <div><h3>You're losing hires to bigger firms</h3><p>A real group plan with a broad PPO network is often the deciding benefit for skilled staff weighing two offers.</p></div>
     </div>
@@ -117,10 +119,10 @@
     <div class="ben ben-owner">
       <h2>What you get as the owner</h2>
       <ul>
-        <li><strong>Seven plan designs to choose from.</strong> Offer one plan or let people pick, from Diamond's $0 deductible to the HSA 9000.</li>
+        <li><strong>Fifteen plan designs to choose from.</strong> Copay, major medical and HSA plans from Ameristead Health and Bright Life, from Diamond's $0 deductible to the HSA 9000.</li>
         <li><strong>A benefit that helps you hire and keep people.</strong> A Cigna PPO card is a benefit candidates recognize.</li>
         <li><strong>Tax-friendly by design.</strong> Employer-paid premiums are generally deductible as a business expense. Confirm the details with your tax professional.</li>
-        <li><strong>HSA options for higher earners.</strong> The HSA 6000 and HSA 9000 pair with a health savings account.</li>
+        <li><strong>HSA options for higher earners.</strong> Four plans pair with a health savings account: Ameristead HSA 6000 and 9000, Bright Life HSA 5500 and 8500.</li>
         <li><strong>One advisor who handles the paperwork.</strong> Quotes, enrollment and renewal questions go to one person.</li>
       </ul>
     </div>
@@ -128,10 +130,10 @@
       <h2>What your team gets</h2>
       <ul>
         <li><strong>$0 preventive care</strong> on every plan, in network.</li>
-        <li><strong>$0 teledoctor visits</strong> on every plan.</li>
+        <li><strong>$0 telehealth visits</strong> on every copay and major medical plan (Bright Life HSA plans: $0 after the deductible).</li>
         <li><strong>No referrals.</strong> See a specialist without a primary care sign-off first.</li>
-        <li><strong>Flat copays</strong> on the Bronze, Silver, Gold, Platinum and Diamond plans, from $25 for primary care.</li>
-        <li><strong>$0 generic prescriptions</strong> on the copay plans ($0/$35/$75 tiers).</li>
+        <li><strong>Flat copays</strong> for doctor visits on 11 of the 15 plans, from $25 for primary care.</li>
+        <li><strong>$0 generic prescriptions</strong> on the Ameristead copay plans and Bright Life copay plans.</li>
       </ul>
     </div>
   </div>
@@ -141,8 +143,12 @@
 <section class="plans" id="plans">
   <div class="wrap">
     <div class="plans-head">
-      <h2>All seven plans, side by side.</h2>
+      <h2>Every plan, side by side.</h2>
       <p>In-network figures from the 2026 plan documents. Your quote confirms rates and eligibility.</p>
+    </div>
+    <div class="fam-tabs" role="tablist" aria-label="Plan family">
+      <button role="tab" aria-selected="true" data-family="ameristead">Ameristead Health <span>7 plans</span></button>
+      <button role="tab" aria-selected="false" data-family="brightlife">Bright Life <span>8 plans</span></button>
     </div>
     <div class="table-scroll" tabindex="0" aria-label="Plan comparison table, scrolls sideways">
       <table class="plan-table">
@@ -150,7 +156,8 @@
         <tbody id="pt-body"></tbody>
       </table>
     </div>
-    <p class="fine">Network: Cigna PPO. Preventive care and teledoctor are $0 on every plan. Specialty drugs require PBM management. GLP-1 medications require preauthorization every 6 months, an A1C of 6 or more, and mail order. This is a summary; the Schedule of Benefits and plan documents govern.</p>
+    <p class="fine" data-family-note="ameristead">Ameristead Health, Cigna PPO network, 2026 plan year. Preventive care and teledoctor are $0 on every plan. Prescriptions are generic/brand/non-preferred tiers on copay plans. Specialty drugs require PBM management. GLP-1 medications require preauthorization every 6 months, an A1C of 6 or more, and mail order. This is a summary; the Schedule of Benefits and plan documents govern.</p>
+    <p class="fine" data-family-note="brightlife" hidden>Bright Life, Cigna PPO network, rates effective September 1, 2026. Elective surgery is not covered for the first 90 days of coverage. Telehealth is through Our Live Doc only. Prescriptions are managed by Verus; GLP-1s are covered through a rider for qualifying members, not for weight loss. This is a summary; the plan documents govern.</p>
     <div class="plans-cta">
       <a class="btn" href="#quote">Find my best-fit plan</a>
       <button class="btn btn-ghost" type="button" data-open-guide>Email me this comparison</button>
@@ -260,10 +267,11 @@
     <h2>Questions business owners ask.</h2>
     <details><summary>Do I need employees to get a plan?</summary><p>No. Tell us it's just you in the quote form and we'll show you the options available to the self-employed in your state.</p></details>
     <details><summary>Can I keep my doctors?</summary><p>If your doctors are in the Cigna PPO network, yes. You can also see out-of-network providers at a higher cost share. We'll check your doctors before you enroll.</p></details>
-    <details><summary>Do I need a referral to see a specialist?</summary><p>No. None of the seven plans require a referral to see a specialist.</p></details>
-    <details><summary>Which plans work with a health savings account?</summary><p>The HSA 6000 and HSA 9000. Both have 70/30 coinsurance after the deductible and $0 preventive care.</p></details>
+    <details><summary>Do I need a referral to see a specialist?</summary><p>No. None of the plans require a referral to see a specialist.</p></details>
+    <details><summary>Which plans work with a health savings account?</summary><p>Four of them: Ameristead HSA 6000 and HSA 9000 (70/30 after the deductible) and Bright Life HSA 5500 and HSA 8500 (80/20 after the deductible). All four include $0 in-network preventive care.</p></details>
+    <details><summary>What's the difference between Ameristead and Bright Life?</summary><p>Both use the Cigna PPO network. Ameristead Health offers seven plans including a $0-deductible Diamond plan. Bright Life offers copay, major medical and HSA plans with deductibles from $1,250 to $8,500. We compare both for your business and show you the best fits.</p></details>
     <details><summary>What does the quote cost?</summary><p>Nothing. There's no fee and no obligation to enroll.</p></details>
-    <details><summary>How are GLP-1 medications like Ozempic or Mounjaro covered?</summary><p>They require preauthorization every 6 months, an A1C of 6 or more, and are filled by mail order only.</p></details>
+    <details><summary>How are GLP-1 medications like Ozempic or Mounjaro covered?</summary><p>It depends on the plan family. Ameristead plans require preauthorization every 6 months, an A1C of 6 or more, and mail order. Bright Life plans cover them through a GLP-1 rider for qualifying members, not for weight loss.</p></details>
   </div>
 </section>
 
@@ -293,7 +301,7 @@
       <a href="guide.html">Plan comparison guide</a>
       <a href="#quote">Get a quote</a>
     </div>
-    <p class="fine foot-legal">Plan options are from Ameristead Health on the Cigna PPO network. Plan information on this site summarizes 2026 plan documents and is subject to change; the Schedule of Benefits and plan documents govern. Not all plans are available in all states. This is a solicitation for insurance; a licensed agent may contact you. Cigna is a registered trademark of its owner, used here only to identify the network.</p>
+    <p class="fine foot-legal">Plan options are from Ameristead Health and Bright Life on the Cigna PPO network. Plan information on this site summarizes 2026 plan documents and is subject to change; the Schedule of Benefits and plan documents govern. Not all plans are available in all states. This is a solicitation for insurance; a licensed agent may contact you. Cigna is a registered trademark of its owner, used here only to identify the network.</p>
   </div>
 </footer>
 
@@ -320,7 +328,7 @@
       <form id="guide-form" novalidate>
         <p class="modal-kicker">Free for business owners</p>
         <h2 id="gm-title" data-cfg="incentive.title">The 2026 Cigna PPO plan comparison for business owners</h2>
-        <p data-cfg="incentive.blurb">All seven plans side by side, with deductibles, copays and out-of-pocket limits, plus a one-page checklist for choosing between them.</p>
+        <p data-cfg="incentive.blurb">All 15 plans side by side, with deductibles, copays and out-of-pocket limits, plus a one-page checklist for choosing between them.</p>
         <label>First name<input name="firstName" autocomplete="given-name" required></label>
         <label>Email<input name="email" type="email" autocomplete="email" required></label>
         <label class="hp" aria-hidden="true">Company website<input name="company_website" tabindex="-1" autocomplete="off"></label>

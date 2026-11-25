@@ -18,25 +18,31 @@
   </style>
   <script src="config.js"></script>
   <script src="plans.js"></script>
+  <script src="plans-brightlife.js"></script>
 </head>
 <body>
 <main class="g">
   <p class="modal-kicker" data-cfg="agencyName">James Insurance Advisory</p>
   <h1>The 2026 Cigna PPO plan comparison for business owners</h1>
-  <p class="lede">Seven plan designs on the Cigna PPO network, in-network figures from the 2026 plan documents. Every plan includes $0 preventive care, $0 teledoctor visits and no referrals to see a specialist.</p>
+  <p class="lede">Fifteen plan designs from two plan families on the Cigna PPO network, Ameristead Health and Bright Life, with in-network figures from the plan documents. Every plan includes $0 in-network preventive care and no referrals to see a specialist.</p>
   <div class="g-actions">
     <button class="btn" type="button" onclick="window.print()">Save as PDF or print</button>
     <a class="btn btn-ghost" href="index.html#quote">Get a quote for my business</a>
   </div>
 
+  <h2>Ameristead Health (2026 plan year)</h2>
   <div class="table-scroll"><table class="plan-table"><thead><tr id="pt-head"><th scope="col">Plan</th></tr></thead><tbody id="pt-body"></tbody></table></div>
+  <p class="fine">Specialty drugs require PBM management. GLP-1s need preauthorization every 6 months, an A1C of 6 or more, and mail order.</p>
+  <h2>Bright Life (rates effective September 1, 2026)</h2>
+  <div class="table-scroll"><table class="plan-table"><thead><tr id="bl-head"><th scope="col">Plan</th></tr></thead><tbody id="bl-body"></tbody></table></div>
+  <p class="fine">Elective surgery is not covered for the first 90 days. Telehealth through Our Live Doc only. Prescriptions managed by Verus; GLP-1s covered by rider for qualifying members, not for weight loss.</p>
 
   <h2>How to choose in five questions</h2>
   <ol>
-    <li><strong>How often does your team see a doctor?</strong> Frequent visits favor the copay plans (Bronze through Diamond), where primary care and specialist visits are a flat fee.</li>
+    <li><strong>How often does your team see a doctor?</strong> Frequent visits favor the copay and major medical plans, where primary care and specialist visits are a flat fee.</li>
     <li><strong>What's the worst year you could absorb?</strong> Compare out-of-pocket maximums, not just deductibles. Platinum caps individual costs at $1,250; the HSA 9000 at $10,100.</li>
-    <li><strong>Do you want a health savings account?</strong> Only the HSA 6000 and HSA 9000 are HSA-eligible. Ask your tax professional how contributions fit your situation.</li>
-    <li><strong>Does anyone take regular prescriptions?</strong> The copay plans use $0/$35/$75 tiers. On the HSA plans, prescriptions are 30% after the deductible. GLP-1s need preauthorization every 6 months, an A1C of 6 or more, and mail order.</li>
+    <li><strong>Do you want a health savings account?</strong> Four plans are HSA-eligible: Ameristead HSA 6000 and 9000, Bright Life HSA 5500 and 8500. Ask your tax professional how contributions fit your situation.</li>
+    <li><strong>Does anyone take regular prescriptions?</strong> Generics are $0 on the Ameristead and Bright Life copay plans and $10 on Bright Life major medical. On the HSA plans, prescriptions apply after the deductible. GLP-1 rules differ by plan family.</li>
     <li><strong>One plan or a choice?</strong> Many owners offer two: a low-deductible plan and an HSA plan, so each person picks what suits them.</li>
   </ol>
 
@@ -44,7 +50,7 @@
   <p>Rates depend on your business, your state and who you're covering. A licensed advisor can price the plans for you at no cost.</p>
   <p class="no-print"><a class="btn" href="index.html#quote">Get my free quote</a></p>
 
-  <p class="fine" style="margin-top:40px">Plan options are from Ameristead Health on the Cigna PPO network. This summary is for information only and is subject to change; the Schedule of Benefits and plan documents govern. Not all plans are available in all states. Tax information is general; consult a tax professional. <span data-cfg="legalName"></span> <span data-cfg="address"></span></p>
+  <p class="fine" style="margin-top:40px">Plan options are from Ameristead Health and Bright Life on the Cigna PPO network. This summary is for information only and is subject to change; the Schedule of Benefits and plan documents govern. Not all plans are available in all states. Tax information is general; consult a tax professional. <span data-cfg="legalName"></span> <span data-cfg="address"></span></p>
 </main>
 <script>
 (function () {
@@ -53,11 +59,15 @@
   var order = ["HSA 9000", "Bronze", "HSA 6000", "Silver", "Gold", "Platinum", "Diamond"];
   var plans = order.map(function (n) { return D.plans.filter(function (p) { return p.name === n; })[0]; });
   var s = function (x) { return String(x).replace("/", " / "); }, m = function (n) { return "$" + Number(n).toLocaleString("en-US"); };
-  var rows = [["Deductible (ind / fam)", function (p) { return s(p.deductible); }], ["Coinsurance", function (p) { return p.coinsurance; }], ["Out-of-pocket max", function (p) { return s(p.max_oop); }], ["Preventive care", function () { return D.common.preventive_care; }], ["Teledoctor", function () { return D.common.teledoctor; }], ["Primary care", function (p) { return p.primary_care; }], ["Specialist", function (p) { return p.specialist; }], ["Urgent care", function (p) { return p.urgent_care; }], ["Prescriptions", function (p) { return p.rx; }]];
+  var rows = [["Deductible (ind / fam)", function (p) { return s(p.deductible); }], ["Coinsurance", function (p) { return p.coinsurance; }], ["Out-of-pocket max", function (p) { return s(p.max_oop); }], ["Preventive care", function () { return D.common.preventive_care; }], ["Telehealth", function () { return D.common.teledoctor; }], ["Primary care", function (p) { return p.primary_care; }], ["Specialist", function (p) { return p.specialist; }], ["Urgent care", function (p) { return p.urgent_care; }], ["Prescriptions", function (p) { return p.rx; }]];
   if (C.showPremiums) [["Employee only", "employee"], ["Employee + spouse", "employee_spouse"], ["Employee + children", "employee_children"], ["Family", "family"]].forEach(function (r) { rows.push([r[0], function (p) { return m(p.premiums[r[1]]); }]); });
   var h = document.getElementById("pt-head"), b = document.getElementById("pt-body");
   plans.forEach(function (p) { var th = document.createElement("th"); th.scope = "col"; th.textContent = p.name + (p.hsa ? " (HSA)" : ""); h.appendChild(th); });
   rows.forEach(function (r) { var tr = document.createElement("tr"), th = document.createElement("th"); th.scope = "row"; th.textContent = r[0]; tr.appendChild(th); plans.forEach(function (p) { var td = document.createElement("td"); td.textContent = r[1](p); tr.appendChild(td); }); b.appendChild(tr); });
+  var BL = (window.PLAN_DATA_BRIGHTLIFE || { plans: [] }).plans, bh = document.getElementById("bl-head"), bb = document.getElementById("bl-body");
+  var blRows = [["Deductible (ind / fam)", "deductible"], ["Coinsurance", "coinsurance"], ["Out-of-pocket max", "max_oop"], ["Preventive care", "preventive_care"], ["Telehealth", "telehealth"], ["Primary care", "primary_care"], ["Specialist", "specialist"], ["Urgent care", "urgent_care"], ["Prescriptions", "rx"]];
+  BL.forEach(function (p) { var th = document.createElement("th"); th.scope = "col"; th.textContent = p.name + (p.hsa ? " (HSA)" : ""); bh.appendChild(th); });
+  blRows.forEach(function (r) { var tr = document.createElement("tr"), th = document.createElement("th"); th.scope = "row"; th.textContent = r[0]; tr.appendChild(th); BL.forEach(function (p) { var td = document.createElement("td"); td.textContent = s(p[r[1]]); tr.appendChild(td); }); bb.appendChild(tr); });
 })();
 </script>
 </body>

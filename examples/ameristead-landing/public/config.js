@@ -15,7 +15,7 @@ window.SITE_CONFIG = {
   // The pop-up offer. Only promise what you can deliver.
   incentive: {
     title: "The 2026 Cigna PPO plan comparison for business owners",
-    blurb: "All seven plans side by side, with deductibles, copays and out-of-pocket limits, plus a one-page checklist for choosing between them.",
+    blurb: "All 15 plans side by side, with deductibles, copays and out-of-pocket limits, plus a one-page checklist for choosing between them.",
     button: "Send me the guide",
     deliverUrl: "guide.html",   // shown right after signup
     delaySeconds: 12,            // earliest the pop-up may appear
