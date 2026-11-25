@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cigna PPO Health Plans for Business Owners | James Insurance Advisory</title>
+  <meta name="description" content="Seven Cigna PPO plan options for business owners and the self-employed, from a $0 deductible to HSA-eligible. Get a free quote or the plan comparison guide.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+  <script src="plans.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top" id="top">
+  <div class="wrap top-row">
+    <a class="brand" href="#top" data-brand>
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z" fill="currentColor"/><path d="M11 16.5 14.5 20 21.5 12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span data-cfg="agencyName">James Insurance Advisory</span>
+    </a>
+    <nav class="top-nav" aria-label="Sections">
+      <a href="#plans">Plans</a>
+      <a href="#benefits">Benefits</a>
+      <a href="#faq">Questions</a>
+    </nav>
+    <div class="top-actions">
+      <a class="call" data-phone hidden></a>
+      <a class="btn btn-small" href="#quote">Get a free quote</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- Hero: headline plus a live plan card the visitor can slide through -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1>Health coverage that works as hard as you do.</h1>
+      <p class="lede">Cigna PPO plans for business owners, their teams and the self-employed. Seven plan designs, from a $0 deductible to HSA-eligible, with $0 preventive care and $0 teledoctor visits on every one.</p>
+      <div class="hero-ctas">
+        <a class="btn" href="#quote">Get my free quote</a>
+        <button class="btn btn-ghost" type="button" data-open-guide>Get the plan comparison guide</button>
+      </div>
+      <ul class="hero-facts">
+        <li>No referral needed to see a specialist</li>
+        <li>Plans for a team of one to 99</li>
+        <li>One licensed advisor from quote to enrollment</li>
+      </ul>
+    </div>
+
+    <div class="plan-card-wrap">
+      <article class="plan-card" aria-live="polite">
+        <header class="plan-card-head">
+          <div>
+            <p class="plan-network">Cigna PPO network</p>
+            <h2 class="plan-name" id="pc-name">Gold</h2>
+          </div>
+          <span class="plan-hsa" id="pc-hsa" hidden>HSA-eligible</span>
+        </header>
+        <dl class="plan-figs">
+          <div class="fig-big"><dt>Deductible, individual / family</dt><dd id="pc-ded">$3,000 / $6,000</dd></div>
+          <div><dt>Primary care</dt><dd id="pc-pcp">$35</dd></div>
+          <div><dt>Specialist</dt><dd id="pc-spec">$55</dd></div>
+          <div><dt>Prescriptions</dt><dd id="pc-rx">$0/$35/$75</dd></div>
+          <div><dt>Out-of-pocket max</dt><dd id="pc-oop">$8,700 / $17,400</dd></div>
+          <div class="fig-prem" id="pc-prem-row" hidden><dt>Employee-only rate</dt><dd id="pc-prem"></dd></div>
+        </dl>
+        <p class="plan-always">On every plan: $0 preventive care and $0 teledoctor</p>
+      </article>
+      <div class="slider">
+        <label for="plan-slider">Slide to compare all seven plans</label>
+        <input id="plan-slider" type="range" min="0" max="6" step="1" value="4" aria-valuetext="Gold">
+        <div class="slider-ends" aria-hidden="true"><span>Higher deductible</span><span>Lower deductible</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pain points: speak to why they are looking now -->
+<section class="why">
+  <div class="wrap">
+    <h2>If any of these sound familiar, it's worth a second look.</h2>
+    <div class="why-list">
+      <div><h3>Your renewal went up again</h3><p>Small groups and individual policies have seen steep increases. Seven plan designs give you room to rebalance premium against deductible instead of just paying more.</p></div>
+      <div><h3>You earn too much for a subsidy</h3><p>If marketplace help disappeared, you may be paying full price for a narrow network. Compare that against a PPO built for business owners.</p></div>
+      <div><h3>You're losing hires to bigger firms</h3><p>A real group plan with a broad PPO network is often the deciding benefit for skilled staff weighing two offers.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Who it's for: tabs that change the copy -->
+<section class="who" aria-labelledby="who-h">
+  <div class="wrap">
+    <h2 id="who-h">Built around how your business runs.</h2>
+    <div class="who-tabs" role="tablist" aria-label="Business type">
+      <button role="tab" aria-selected="true" aria-controls="who-panel" data-who="medspa">Med spas</button>
+      <button role="tab" aria-selected="false" aria-controls="who-panel" data-who="cpa">CPA firms</button>
+      <button role="tab" aria-selected="false" aria-controls="who-panel" data-who="advisor">Financial advisors</button>
+      <button role="tab" aria-selected="false" aria-controls="who-panel" data-who="realestate">Real estate</button>
+      <button role="tab" aria-selected="false" aria-controls="who-panel" data-who="solo">Self-employed</button>
+    </div>
+    <div class="who-panel" id="who-panel" role="tabpanel" tabindex="0">
+      <h3 id="who-title"></h3>
+      <p id="who-body"></p>
+      <a class="link" href="#quote" id="who-cta">Get a quote for my practice</a>
+    </div>
+  </div>
+</section>
+
+<!-- Employer vs employee -->
+<section class="benefits" id="benefits">
+  <div class="wrap benefits-grid">
+    <div class="ben ben-owner">
+      <h2>What you get as the owner</h2>
+      <ul>
+        <li><strong>Seven plan designs to choose from.</strong> Offer one plan or let people pick, from Diamond's $0 deductible to the HSA 9000.</li>
+        <li><strong>A benefit that helps you hire and keep people.</strong> A Cigna PPO card is a benefit candidates recognize.</li>
+        <li><strong>Tax-friendly by design.</strong> Employer-paid premiums are generally deductible as a business expense. Confirm the details with your tax professional.</li>
+        <li><strong>HSA options for higher earners.</strong> The HSA 6000 and HSA 9000 pair with a health savings account.</li>
+        <li><strong>One advisor who handles the paperwork.</strong> Quotes, enrollment and renewal questions go to one person.</li>
+      </ul>
+    </div>
+    <div class="ben ben-team">
+      <h2>What your team gets</h2>
+      <ul>
+        <li><strong>$0 preventive care</strong> on every plan, in network.</li>
+        <li><strong>$0 teledoctor visits</strong> on every plan.</li>
+        <li><strong>No referrals.</strong> See a specialist without a primary care sign-off first.</li>
+        <li><strong>Flat copays</strong> on the Bronze, Silver, Gold, Platinum and Diamond plans, from $25 for primary care.</li>
+        <li><strong>$0 generic prescriptions</strong> on the copay plans ($0/$35/$75 tiers).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Full comparison table -->
+<section class="plans" id="plans">
+  <div class="wrap">
+    <div class="plans-head">
+      <h2>All seven plans, side by side.</h2>
+      <p>In-network figures from the 2026 plan documents. Your quote confirms rates and eligibility.</p>
+    </div>
+    <div class="table-scroll" tabindex="0" aria-label="Plan comparison table, scrolls sideways">
+      <table class="plan-table">
+        <thead><tr id="pt-head"><th scope="col">Plan</th></tr></thead>
+        <tbody id="pt-body"></tbody>
+      </table>
+    </div>
+    <p class="fine">Network: Cigna PPO. Preventive care and teledoctor are $0 on every plan. Specialty drugs require PBM management. GLP-1 medications require preauthorization every 6 months, an A1C of 6 or more, and mail order. This is a summary; the Schedule of Benefits and plan documents govern.</p>
+    <div class="plans-cta">
+      <a class="btn" href="#quote">Find my best-fit plan</a>
+      <button class="btn btn-ghost" type="button" data-open-guide>Email me this comparison</button>
+    </div>
+  </div>
+</section>
+
+<!-- Process: a real sequence, so numbered -->
+<section class="steps">
+  <div class="wrap">
+    <h2>From question to coverage in three steps.</h2>
+    <ol class="step-list">
+      <li><h3>Tell us about your business</h3><p>Two minutes: business type, team size and state.</p></li>
+      <li><h3>Review your options together</h3><p>A short call to match plans to your budget and your team's needs.</p></li>
+      <li><h3>Enroll and get covered</h3><p>We handle the application and stay on as your point of contact.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- Quote form -->
+<section class="quote" id="quote">
+  <div class="wrap quote-grid">
+    <div class="quote-intro">
+      <h2>Get your free quote.</h2>
+      <p>No cost and no obligation. A licensed advisor reviews your answers and follows up with the plans that fit.</p>
+      <div class="advisor">
+        <div class="advisor-avatar" aria-hidden="true" data-initials>JIA</div>
+        <div>
+          <p class="advisor-name" data-cfg="advisorName">[ADVISOR NAME]</p>
+          <p class="advisor-title" data-cfg="advisorTitle">Licensed health insurance agent</p>
+        </div>
+      </div>
+      <a class="btn btn-ghost" data-calendar href="#quote">Book a 15-minute call instead</a>
+    </div>
+
+    <form class="quote-form" id="quote-form" novalidate>
+      <div class="progress" aria-hidden="true"><span id="q-progress"></span></div>
+      <p class="step-label" id="q-step-label">Step 1 of 2: your business</p>
+
+      <fieldset class="q-step" data-step="1">
+        <legend class="sr">Your business</legend>
+        <label>Type of business
+          <select name="businessType" required>
+            <option value="">Choose one</option>
+            <option>Med spa or aesthetics</option>
+            <option>CPA or accounting firm</option>
+            <option>Financial advisory</option>
+            <option>Real estate</option>
+            <option>Other professional services</option>
+            <option>Self-employed / sole proprietor</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>People to cover, including you
+          <select name="employees" required>
+            <option value="">Choose one</option>
+            <option>Just me</option>
+            <option>2 to 9</option>
+            <option>10 to 24</option>
+            <option>25 to 49</option>
+            <option>50 to 99</option>
+            <option>100 or more</option>
+          </select>
+        </label>
+        <label>State
+          <select name="state" required id="state-select"><option value="">Choose a state</option></select>
+        </label>
+        <button class="btn btn-block" type="button" id="q-next">Continue</button>
+      </fieldset>
+
+      <fieldset class="q-step" data-step="2" hidden>
+        <legend class="sr">Your contact details</legend>
+        <div class="two">
+          <label>First name<input name="firstName" autocomplete="given-name" required></label>
+          <label>Last name<input name="lastName" autocomplete="family-name" required></label>
+        </div>
+        <label>Work email<input name="email" type="email" autocomplete="email" required></label>
+        <label><span>Mobile phone <span class="opt">(optional)</span></span><input name="phone" type="tel" autocomplete="tel"></label>
+        <label class="hp" aria-hidden="true">Company website<input name="company_website" tabindex="-1" autocomplete="off"></label>
+
+        <label class="check"><input type="checkbox" name="smsConsent" value="yes">
+          <span id="tcpa-text">By checking this box, I agree that James Insurance Advisory may call and text me at the number above about health insurance options, including with automated technology and prerecorded messages. Consent is not a condition of purchase. Message frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out or HELP for help.</span>
+        </label>
+        <label class="check"><input type="checkbox" name="emailOptIn" value="yes">
+          <span id="email-optin-text">Email me plan updates and benefit tips. Unsubscribe anytime.</span>
+        </label>
+
+        <div class="q-actions">
+          <button class="btn btn-ghost" type="button" id="q-back">Back</button>
+          <button class="btn" type="submit">Request my quote</button>
+        </div>
+        <p class="fine">By requesting a quote you agree to our <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms</a>. We never sell your information.</p>
+      </fieldset>
+
+      <p class="form-error" role="alert" id="q-error" hidden></p>
+      <div class="form-done" id="q-done" hidden tabindex="-1">
+        <h3>Quote requested.</h3>
+        <p>A licensed advisor will review your answers and reach out to you directly.</p>
+        <a class="btn" data-calendar href="#quote">Book a time now</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="wrap faq-wrap">
+    <h2>Questions business owners ask.</h2>
+    <details><summary>Do I need employees to get a plan?</summary><p>No. Tell us it's just you in the quote form and we'll show you the options available to the self-employed in your state.</p></details>
+    <details><summary>Can I keep my doctors?</summary><p>If your doctors are in the Cigna PPO network, yes. You can also see out-of-network providers at a higher cost share. We'll check your doctors before you enroll.</p></details>
+    <details><summary>Do I need a referral to see a specialist?</summary><p>No. None of the seven plans require a referral to see a specialist.</p></details>
+    <details><summary>Which plans work with a health savings account?</summary><p>The HSA 6000 and HSA 9000. Both have 70/30 coinsurance after the deductible and $0 preventive care.</p></details>
+    <details><summary>What does the quote cost?</summary><p>Nothing. There's no fee and no obligation to enroll.</p></details>
+    <details><summary>How are GLP-1 medications like Ozempic or Mounjaro covered?</summary><p>They require preauthorization every 6 months, an A1C of 6 or more, and are filled by mail order only.</p></details>
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap closer-row">
+    <h2>See what your business would pay.</h2>
+    <div class="closer-ctas">
+      <a class="btn btn-light" href="#quote">Get my free quote</a>
+      <a class="btn btn-outline-light" data-calendar href="#quote">Book a call</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <p class="foot-brand" data-cfg="agencyName">James Insurance Advisory</p>
+      <p data-cfg="legalName">[AGENCY LEGAL NAME]</p>
+      <p data-cfg="address">[AGENCY MAILING ADDRESS]</p>
+      <p>Licensed in: <span data-cfg="licensedStates">[LICENSED STATES AND LICENSE NUMBERS]</span></p>
+    </div>
+    <div class="foot-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms</a>
+      <a href="guide.html">Plan comparison guide</a>
+      <a href="#quote">Get a quote</a>
+    </div>
+    <p class="fine foot-legal">Plan options are from Ameristead Health on the Cigna PPO network. Plan information on this site summarizes 2026 plan documents and is subject to change; the Schedule of Benefits and plan documents govern. Not all plans are available in all states. This is a solicitation for insurance; a licensed agent may contact you. Cigna is a registered trademark of its owner, used here only to identify the network.</p>
+  </div>
+</footer>
+
+<!-- Sticky bar on phones -->
+<div class="sticky-cta" id="sticky-cta" aria-hidden="true">
+  <a class="btn btn-block" href="#quote" tabindex="-1">Get my free quote</a>
+  <a class="sticky-call" data-phone hidden tabindex="-1" aria-label="Call us">Call</a>
+</div>
+
+<!-- Lead magnet pop-up -->
+<div class="modal" id="guide-modal" role="dialog" aria-modal="true" aria-labelledby="gm-title" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <button class="modal-x" type="button" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="modal-art" aria-hidden="true">
+      <div class="mini-guide">
+        <span class="mg-tag">Free guide</span>
+        <span class="mg-row"><b></b><i></i></span><span class="mg-row"><b></b><i></i></span><span class="mg-row"><b></b><i></i></span><span class="mg-row"><b></b><i></i></span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <form id="guide-form" novalidate>
+        <p class="modal-kicker">Free for business owners</p>
+        <h2 id="gm-title" data-cfg="incentive.title">The 2026 Cigna PPO plan comparison for business owners</h2>
+        <p data-cfg="incentive.blurb">All seven plans side by side, with deductibles, copays and out-of-pocket limits, plus a one-page checklist for choosing between them.</p>
+        <label>First name<input name="firstName" autocomplete="given-name" required></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required></label>
+        <label class="hp" aria-hidden="true">Company website<input name="company_website" tabindex="-1" autocomplete="off"></label>
+        <button class="btn btn-block" type="submit" data-cfg="incentive.button">Send me the guide</button>
+        <p class="fine" id="guide-consent-text">You'll get the guide plus occasional emails about health plans for business owners from James Insurance Advisory. Unsubscribe anytime. <a href="privacy.html">Privacy Policy</a>.</p>
+        <p class="form-error" role="alert" hidden></p>
+      </form>
+      <div class="modal-done" hidden tabindex="-1">
+        <h2>Your guide is ready.</h2>
+        <p>Open it now. If you confirm your email, we'll send you a copy too.</p>
+        <a class="btn btn-block" id="guide-link" href="guide.html" target="_blank" rel="noopener">Open the guide</a>
+        <a class="link" href="#quote" data-close>Or get a quote for my business</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 Cigna PPO Plan Comparison for Business Owners</title>
+  <meta name="robots" content="noindex">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { background: #fff; }
+    .g { width: min(980px, 100% - 32px); margin: 40px auto 80px; }
+    .g h1 { font-size: clamp(2rem, 4.4vw, 3rem); }
+    .g h2 { font-size: 1.5rem; margin-top: 2em; }
+    .g ol { padding-left: 1.2em; } .g li { margin-bottom: .6em; }
+    .g-actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
+    @media print { .g-actions, .no-print { display: none !important; } .table-scroll { overflow: visible; border: 0; } .plan-table { min-width: 0; font-size: 10pt; } .plan-table th, .plan-table td { padding: 6px; } .g { margin: 0; width: 100%; } }
+  </style>
+  <script src="config.js"></script>
+  <script src="plans.js"></script>
+</head>
+<body>
+<main class="g">
+  <p class="modal-kicker" data-cfg="agencyName">James Insurance Advisory</p>
+  <h1>The 2026 Cigna PPO plan comparison for business owners</h1>
+  <p class="lede">Seven plan designs on the Cigna PPO network, in-network figures from the 2026 plan documents. Every plan includes $0 preventive care, $0 teledoctor visits and no referrals to see a specialist.</p>
+  <div class="g-actions">
+    <button class="btn" type="button" onclick="window.print()">Save as PDF or print</button>
+    <a class="btn btn-ghost" href="index.html#quote">Get a quote for my business</a>
+  </div>
+
+  <div class="table-scroll"><table class="plan-table"><thead><tr id="pt-head"><th scope="col">Plan</th></tr></thead><tbody id="pt-body"></tbody></table></div>
+
+  <h2>How to choose in five questions</h2>
+  <ol>
+    <li><strong>How often does your team see a doctor?</strong> Frequent visits favor the copay plans (Bronze through Diamond), where primary care and specialist visits are a flat fee.</li>
+    <li><strong>What's the worst year you could absorb?</strong> Compare out-of-pocket maximums, not just deductibles. Platinum caps individual costs at $1,250; the HSA 9000 at $10,100.</li>
+    <li><strong>Do you want a health savings account?</strong> Only the HSA 6000 and HSA 9000 are HSA-eligible. Ask your tax professional how contributions fit your situation.</li>
+    <li><strong>Does anyone take regular prescriptions?</strong> The copay plans use $0/$35/$75 tiers. On the HSA plans, prescriptions are 30% after the deductible. GLP-1s need preauthorization every 6 months, an A1C of 6 or more, and mail order.</li>
+    <li><strong>One plan or a choice?</strong> Many owners offer two: a low-deductible plan and an HSA plan, so each person picks what suits them.</li>
+  </ol>
+
+  <h2>Next step</h2>
+  <p>Rates depend on your business, your state and who you're covering. A licensed advisor can price the plans for you at no cost.</p>
+  <p class="no-print"><a class="btn" href="index.html#quote">Get my free quote</a></p>
+
+  <p class="fine" style="margin-top:40px">Plan options are from Ameristead Health on the Cigna PPO network. This summary is for information only and is subject to change; the Schedule of Benefits and plan documents govern. Not all plans are available in all states. Tax information is general; consult a tax professional. <span data-cfg="legalName"></span> <span data-cfg="address"></span></p>
+</main>
+<script>
+(function () {
+  var C = window.SITE_CONFIG || {}, D = window.PLAN_DATA;
+  document.querySelectorAll("[data-cfg]").forEach(function (el) { var v = el.getAttribute("data-cfg").split(".").reduce(function (o, k) { return o ? o[k] : undefined; }, C); if (v) el.textContent = v; });
+  var order = ["HSA 9000", "Bronze", "HSA 6000", "Silver", "Gold", "Platinum", "Diamond"];
+  var plans = order.map(function (n) { return D.plans.filter(function (p) { return p.name === n; })[0]; });
+  var s = function (x) { return String(x).replace("/", " / "); }, m = function (n) { return "$" + Number(n).toLocaleString("en-US"); };
+  var rows = [["Deductible (ind / fam)", function (p) { return s(p.deductible); }], ["Coinsurance", function (p) { return p.coinsurance; }], ["Out-of-pocket max", function (p) { return s(p.max_oop); }], ["Preventive care", function () { return D.common.preventive_care; }], ["Teledoctor", function () { return D.common.teledoctor; }], ["Primary care", function (p) { return p.primary_care; }], ["Specialist", function (p) { return p.specialist; }], ["Urgent care", function (p) { return p.urgent_care; }], ["Prescriptions", function (p) { return p.rx; }]];
+  if (C.showPremiums) [["Employee only", "employee"], ["Employee + spouse", "employee_spouse"], ["Employee + children", "employee_children"], ["Family", "family"]].forEach(function (r) { rows.push([r[0], function (p) { return m(p.premiums[r[1]]); }]); });
+  var h = document.getElementById("pt-head"), b = document.getElementById("pt-body");
+  plans.forEach(function (p) { var th = document.createElement("th"); th.scope = "col"; th.textContent = p.name + (p.hsa ? " (HSA)" : ""); h.appendChild(th); });
+  rows.forEach(function (r) { var tr = document.createElement("tr"), th = document.createElement("th"); th.scope = "row"; th.textContent = r[0]; tr.appendChild(th); plans.forEach(function (p) { var td = document.createElement("td"); td.textContent = r[1](p); tr.appendChild(td); }); b.appendChild(tr); });
+})();
+</script>
+</body>
+</html>
