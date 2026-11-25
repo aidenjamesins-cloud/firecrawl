@@ -26,6 +26,7 @@ class Settings:
     firecrawl_api_key: str = ""
     mailchimp_api_key: str = ""
     mailchimp_audience_id: str = ""
+    mailchimp_server_prefix: str = ""
     from_name: str = "[SENDER NAME]"
     reply_to: str = "[REPLY-TO ADDRESS]"
     dnc_csv_path: str = ""
@@ -50,6 +51,7 @@ class Settings:
             firecrawl_api_key=_env("FIRECRAWL_API_KEY"),
             mailchimp_api_key=_env("MAILCHIMP_API_KEY"),
             mailchimp_audience_id=_env("MAILCHIMP_AUDIENCE_ID"),
+            mailchimp_server_prefix=_env("MAILCHIMP_SERVER_PREFIX"),
             from_name=_env("MAILCHIMP_FROM_NAME", d.from_name),
             reply_to=_env("MAILCHIMP_REPLY_TO", d.reply_to),
             dnc_csv_path=_env("DNC_CSV_PATH"),

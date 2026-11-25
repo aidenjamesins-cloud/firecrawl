@@ -193,11 +193,11 @@ def unfilled_tokens(text: str) -> list[str]:
 
 
 # ---- cold email export ----------------------------------------------------
-# Most cold outreach tools (Instantly, Smartlead, lemlist, Apollo) use {{double-brace}}
-# variables from the uploaded CSV columns. Adjust these if your tool differs.
+# Instantly variables. Its CSV import maps the "First Name" and "Company Name" columns
+# to {{firstName}} and {{companyName}}. Change these for another cold email tool.
 COLD_TOKENS = {
-    "*|FNAME|*": "{{first_name}}",
-    "*|BIZ|*": "{{company_name}}",
+    "*|FNAME|*": "{{firstName}}",
+    "*|BIZ|*": "{{companyName}}",
 }
 COLD_OPT_OUT = "Not interested? Reply \"unsubscribe\" and you will not hear from me again."
 

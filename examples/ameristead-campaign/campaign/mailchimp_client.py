@@ -31,15 +31,20 @@ def subscriber_hash(email: str) -> str:
 
 
 class MailchimpClient:
-    def __init__(self, api_key: str, audience_id: str, session: requests.Session | None = None):
-        if not api_key or "-" not in api_key:
-            raise ValueError("MAILCHIMP_API_KEY is missing or has no data-center suffix (e.g. -us21)")
+    def __init__(self, api_key: str, audience_id: str, session: requests.Session | None = None,
+                 server_prefix: str = ""):
+        # The data center comes from the key suffix (-us21) or MAILCHIMP_SERVER_PREFIX when the
+        # key is held by a proxy as a network secret instead of an environment variable.
+        dc = server_prefix or (api_key.rsplit("-", 1)[1] if "-" in api_key else "")
+        if not dc:
+            raise ValueError("Set MAILCHIMP_API_KEY (ending in -usXX) or MAILCHIMP_SERVER_PREFIX (e.g. us21)")
         if not audience_id:
             raise ValueError("MAILCHIMP_AUDIENCE_ID is not set")
-        self.base = f"https://{api_key.rsplit('-', 1)[1]}.api.mailchimp.com/3.0"
+        self.base = f"https://{dc}.api.mailchimp.com/3.0"
         self.list_id = audience_id
         self.session = session or requests.Session()
-        self.session.auth = ("anystring", api_key)
+        if api_key:
+            self.session.auth = ("anystring", api_key)
 
     def _request(self, method: str, path: str, **kw: Any) -> dict:
         if any(a in path for a in BLOCKED_ACTIONS):

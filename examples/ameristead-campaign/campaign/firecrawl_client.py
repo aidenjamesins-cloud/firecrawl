@@ -10,10 +10,12 @@ BASE_URL = "https://api.firecrawl.dev/v2"
 
 class FirecrawlClient:
     def __init__(self, api_key: str, session: requests.Session | None = None, timeout: int = 120):
-        if not api_key:
-            raise ValueError("FIRECRAWL_API_KEY is not set")
+        # With no key in the environment, the request goes out without an Authorization
+        # header so a proxy holding the key as a network secret can add it.
         self.session = session or requests.Session()
-        self.session.headers.update({"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"})
+        self.session.headers.update({"Content-Type": "application/json"})
+        if api_key:
+            self.session.headers["Authorization"] = f"Bearer {api_key}"
         self.timeout = timeout
 
     def _post(self, path: str, body: dict[str, Any]) -> dict[str, Any]:

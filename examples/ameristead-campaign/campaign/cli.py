@@ -113,9 +113,10 @@ def main(argv: list[str] | None = None) -> int:
         leads_path = os.path.join(a.out_dir, f"cold_leads_{a.niche}.csv")
         with open(leads_path, "w", newline="") as fh:
             w = csv.writer(fh)
-            w.writerow(["email", "first_name", "last_name", "company_name", "niche", "city", "state", "website"])
+            # Headers Instantly's lead import recognizes; the rest become custom variables.
+            w.writerow(["Email", "First Name", "Last Name", "Company Name", "Website", "niche", "city", "state"])
             for p in leads:
-                w.writerow([p.email, p.first_name, p.last_name, p.business_name, p.niche, p.city, p.state, p.source_url])
+                w.writerow([p.email, p.first_name, p.last_name, p.business_name, p.source_url, p.niche, p.city, p.state])
         seq_csv = os.path.join(a.out_dir, f"cold_sequence_{a.niche}.csv")
         with open(seq_csv, "w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=["step", "send_day", "subject", "body"])
@@ -136,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
                 emails += [c.strip().lower() for row in csv.reader(fh) for c in row if "@" in c]
         if not a.skip_mailchimp:
             from .mailchimp_client import MailchimpClient
-            emails += MailchimpClient(s.mailchimp_api_key, s.mailchimp_audience_id).unsubscribed_emails()
+            emails += MailchimpClient(s.mailchimp_api_key, s.mailchimp_audience_id, server_prefix=s.mailchimp_server_prefix).unsubscribed_emails()
         add_to_suppression(path, emails)
         print(f"Merged {len(emails)} opt-out addresses into {path}.")
         return 0
@@ -147,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     from .mailchimp_client import MailchimpClient
-    mc = MailchimpClient(s.mailchimp_api_key, s.mailchimp_audience_id)
+    mc = MailchimpClient(s.mailchimp_api_key, s.mailchimp_audience_id, server_prefix=s.mailchimp_server_prefix)
 
     if a.cmd == "draft":
         seq = build_sequence(a.niche, _pain_points(a.pain_points), s)
