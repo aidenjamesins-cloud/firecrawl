@@ -1,0 +1,11 @@
+{
+  "name": "ameristead-landing",
+  "private": true,
+  "type": "module",
+  "description": "Lead capture landing page for Cigna PPO plans (static site + one serverless function).",
+  "scripts": {
+    "dev": "node server.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": { "node": ">=18" }
+}
