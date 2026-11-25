@@ -136,7 +136,7 @@ def main(argv: list[str] | None = None) -> int:
                 emails += [c.strip().lower() for row in csv.reader(fh) for c in row if "@" in c]
         if not a.skip_mailchimp:
             from .mailchimp_client import MailchimpClient
-            emails += MailchimpClient(s.mailchimp_api_key, s.mailchimp_audience_id).unsubscribed_emails()
+            emails += MailchimpClient(s.mailchimp_api_key, s.mailchimp_audience_id, server_prefix=s.mailchimp_server_prefix).unsubscribed_emails()
         add_to_suppression(path, emails)
         print(f"Merged {len(emails)} opt-out addresses into {path}.")
         return 0
@@ -147,7 +147,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     from .mailchimp_client import MailchimpClient
-    mc = MailchimpClient(s.mailchimp_api_key, s.mailchimp_audience_id)
+    mc = MailchimpClient(s.mailchimp_api_key, s.mailchimp_audience_id, server_prefix=s.mailchimp_server_prefix)
 
     if a.cmd == "draft":
         seq = build_sequence(a.niche, _pain_points(a.pain_points), s)
