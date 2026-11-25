@@ -1,0 +1,11 @@
+.env
+out/
+data/pain_points.json
+data/prospects*.csv
+data/clean*.csv
+data/excluded.csv
+data/suppression.csv
+data/dnc*.csv
+data/litigator*.csv
+__pycache__/
+.pytest_cache/

@@ -1,0 +1,106 @@
+[
+  {
+    "theme": "subsidy_cliff",
+    "headline": "The enhanced ACA subsidies expired on January 1, 2026",
+    "detail": "Self-employed earners above 400% of the poverty line went back to paying full price on the exchange, and 2027 rates are rising for a second straight year.",
+    "employer_angle": "Owners who relied on the exchange for their own coverage are now paying full price with nothing to show for it on the business side.",
+    "employee_angle": "Staff buying their own exchange coverage lost the same help.",
+    "evidence": [
+      {
+        "url": "https://www.cfhic.com/aca-enhanced-subsidies-expired-what-it-means-for-employer-health-plans/",
+        "title": "ACA Enhanced Subsidies Expired: Employer Impact"
+      },
+      {
+        "url": "https://mollihealth.com/aca-subsidies-ending-2026",
+        "title": "ACA Subsidies Ended in 2026: What Self-Employed Workers Should Do"
+      },
+      {
+        "url": "https://mynews4.com/news/nation-world/aca-premiums-jump-for-second-straight-year-as-subsidy-loss-squeezes-shoppers",
+        "title": "ACA premiums jump for second straight year"
+      }
+    ],
+    "verify_before_send": true
+  },
+  {
+    "theme": "premium_spike",
+    "headline": "Employer premiums keep climbing",
+    "detail": "KFF's 2026 Employer Health Benefits Survey puts average annual premiums at $9,804 for single and $28,303 for family coverage, and a Marsh survey expects at least another 8% next year.",
+    "employer_angle": "Small firms feel every percentage point of increase in their margins.",
+    "employee_angle": "Rising payroll deductions and deductibles cut into take-home pay.",
+    "evidence": [
+      {
+        "url": "https://www.kff.org/health-costs/2026-employer-health-benefits-survey/",
+        "title": "KFF 2026 Employer Health Benefits Survey"
+      },
+      {
+        "url": "https://newsone.com/6870904/health-insurance-costs-increase-expected/",
+        "title": "Employer-Provided Health Insurance Costs Expected To Increase Next Year"
+      }
+    ],
+    "verify_before_send": true
+  },
+  {
+    "theme": "ichra_alternatives",
+    "headline": "New plan structures are replacing traditional group coverage",
+    "detail": "ICHRAs (now called CHOICE arrangements) and level-funded plans are being pitched to small businesses everywhere. Many owners are not sure which structure fits.",
+    "employer_angle": "A side-by-side look at a group PPO versus an allowance-style arrangement makes the decision simple.",
+    "employee_angle": "Employees often prefer a real plan with a known network over an allowance to shop on their own.",
+    "evidence": [
+      {
+        "url": "https://www.chcquotes.com/post/small-business-health-insurance-options-in-2026-the-structures-that-are-replacing-traditional-group",
+        "title": "Small Business Health Insurance Options in 2026"
+      },
+      {
+        "url": "https://www.kff.org/health-costs/2026-employer-health-benefits-survey/",
+        "title": "KFF 2026 Employer Health Benefits Survey"
+      }
+    ],
+    "verify_before_send": true
+  },
+  {
+    "theme": "tax_strategy",
+    "headline": "Health premiums are one of the cleanest tax strategies available to owners",
+    "detail": "Employer-paid premiums are generally deductible and exempt from payroll taxes, and self-employed owners can generally deduct their own premiums.",
+    "employer_angle": "Turn an after-tax personal expense into a deductible business benefit (confirm with your tax professional).",
+    "employee_angle": "Employer-paid premiums are generally not taxable income to the employee.",
+    "evidence": [
+      {
+        "url": "https://diversehealth.ai/blog/small-business-health-insurance-tax-credits-2026",
+        "title": "Small Business Health Insurance in 2026: Tax Credits, ICHRA & Level-Funded Plans"
+      },
+      {
+        "url": "https://www.healthcaresolutionsteam-brandon.com/5-ways-self-employed-folks-deduct-health-insurance-2026",
+        "title": "5 Ways Self-Employed Folks Deduct Health Insurance (2026)"
+      }
+    ],
+    "verify_before_send": true
+  },
+  {
+    "theme": "open_enrollment_deadline",
+    "headline": "Open enrollment for 2027 runs November 1, 2026 to January 15, 2027",
+    "detail": "December 15 is the last day to enroll for coverage starting January 1.",
+    "employer_angle": "A decision made before December 15 can start the new year on a better plan.",
+    "employee_angle": "Families get coverage in place from January 1.",
+    "evidence": [
+      {
+        "url": "https://www.freedinsure.com/self-employed-insurance/",
+        "title": "Self-Employed Health Insurance: 2027 Options"
+      },
+      {
+        "url": "https://remodelhealth.com/blog/a-guide-to-open-enrollment-for-health-insurance",
+        "title": "A Guide to Open Enrollment for Individual Health Insurance"
+      }
+    ],
+    "verify_before_send": true
+  },
+  {
+    "theme": "glp1_coverage",
+    "headline": "GLP-1 coverage is getting harder to find",
+    "detail": "Employers and carriers have been tightening coverage for GLP-1 drugs like Ozempic and Mounjaro.",
+    "employer_angle": "A plan with a defined GLP-1 path is a benefit employees notice.",
+    "employee_angle": "On these plans, GLP-1s are covered with preauthorization every 6 months for members with an A1C of 6 or more, by mail order.",
+    "evidence": [],
+    "verify_before_send": true,
+    "_note": "Trend claim not yet sourced. Run the trend agent or add a source before using this headline."
+  }
+]
