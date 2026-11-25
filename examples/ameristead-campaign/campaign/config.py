@@ -30,6 +30,7 @@ class Settings:
     from_name: str = "[SENDER NAME]"
     reply_to: str = "[REPLY-TO ADDRESS]"
     dnc_csv_path: str = ""
+    scrub_cleared_csv_path: str = ""
     litigator_csv_path: str = ""
     suppression_csv_path: str = ""
     scrub_api_url: str = ""
@@ -55,6 +56,7 @@ class Settings:
             from_name=_env("MAILCHIMP_FROM_NAME", d.from_name),
             reply_to=_env("MAILCHIMP_REPLY_TO", d.reply_to),
             dnc_csv_path=_env("DNC_CSV_PATH"),
+            scrub_cleared_csv_path=_env("SCRUB_CLEARED_CSV_PATH"),
             litigator_csv_path=_env("LITIGATOR_CSV_PATH"),
             suppression_csv_path=_env("SUPPRESSION_CSV_PATH"),
             scrub_api_url=_env("SCRUB_API_URL"),

@@ -124,7 +124,7 @@ def build_sequence(niche: str, pain_points: list[dict], s: Settings, plans: dict
     deadline = _pp(pain_points, "open_enrollment_deadline")
     brochure = f'<a href="{s.brochure_url}">See the plan flyer</a>'
     book = f'<a href="{s.booking_url}">Grab 15 minutes on my calendar</a>'
-    sign = f"{html.escape(s.from_name)}<br>{html.escape(s.agency_name)}"
+    sign = f"{html.escape(s.from_name.split('|')[0].strip())}<br>{html.escape(s.agency_name)}"
     price_line = (f" Employee-only coverage starts at ${cheapest['premiums']['employee']:,}/month on the {cheapest['name']} plan."
                   if s.include_premiums else "")
 

@@ -74,6 +74,24 @@ class CsvListProvider(ScrubProvider):
         return ScrubResult(dnc=dnc, litigator=lit, source=self.name)
 
 
+class ClearedListProvider(ScrubProvider):
+    """For a DNC and litigator scrub done outside this tool.
+
+    Send the scraped prospects CSV through your scrub process and save the records that
+    came back CLEAR of both DNC and litigator lists (any CSV with an email and/or phone
+    column). Only those are cleared; anyone missing from the file stays excluded.
+    """
+    name = "external scrub"
+
+    def __init__(self, cleared_path: str):
+        self.cleared = _read_values(cleared_path)
+
+    def check(self, phone: str, email: str) -> ScrubResult:
+        if email.lower() in self.cleared or (phone and phone in self.cleared):
+            return ScrubResult(dnc=False, litigator=False, source=self.name)
+        return ScrubResult(source=self.name)
+
+
 class HttpScrubProvider(ScrubProvider):
     """Generic vendor API. Expects POST {phone, email} -> {"dnc": bool, "litigator": bool}.
 
@@ -118,6 +136,8 @@ class ComplianceFilter:
     @classmethod
     def from_settings(cls, s: Settings) -> "ComplianceFilter":
         providers: list[ScrubProvider] = []
+        if s.scrub_cleared_csv_path:
+            providers.append(ClearedListProvider(s.scrub_cleared_csv_path))
         if s.dnc_csv_path or s.litigator_csv_path:
             providers.append(CsvListProvider(s.dnc_csv_path, s.litigator_csv_path))
         if s.scrub_api_url:

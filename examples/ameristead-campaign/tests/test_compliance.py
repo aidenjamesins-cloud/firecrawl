@@ -1,4 +1,4 @@
-from campaign.compliance import CsvListProvider, ComplianceFilter, HttpScrubProvider, ScrubResult, ScrubProvider
+from campaign.compliance import ClearedListProvider, CsvListProvider, ComplianceFilter, HttpScrubProvider, ScrubResult, ScrubProvider
 from campaign.prospect_scraper import Prospect
 
 
@@ -68,3 +68,10 @@ def test_http_provider_error_is_unknown():
         def post(self, *a, **k): raise ConnectionError("down")
     r = HttpScrubProvider("https://x", "k", session=Boom()).check("5125550100", "a@b.com")
     assert (r.dnc, r.litigator) == (None, None)
+
+
+def test_external_cleared_list(tmp_path):
+    cleared = tmp_path / "cleared.csv"; cleared.write_text("email,phone\nowner@spa.com,5125550100\n")
+    f = F([ClearedListProvider(str(cleared))])
+    assert f.reason_to_exclude(P()) is None
+    assert f.reason_to_exclude(P(email="other@spa.com", phone="5125550199")) == "DNC status unknown"
