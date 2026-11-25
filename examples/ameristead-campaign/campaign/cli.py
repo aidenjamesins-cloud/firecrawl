@@ -110,7 +110,9 @@ def main(argv: list[str] | None = None) -> int:
         report = ComplianceFilter.from_settings(s).run(read_csv(a.inp))
         leads = [p for p in report.kept if p.niche == a.niche]
         os.makedirs(a.out_dir, exist_ok=True)
-        leads_path = os.path.join(a.out_dir, f"cold_leads_{a.niche}.csv")
+        external = s.dnc_scrub == "external"
+        suffix = "_NOT_SCRUBBED" if external else ""
+        leads_path = os.path.join(a.out_dir, f"cold_leads_{a.niche}{suffix}.csv")
         with open(leads_path, "w", newline="") as fh:
             w = csv.writer(fh)
             # Headers Instantly's lead import recognizes; the rest become custom variables.
@@ -125,7 +127,9 @@ def main(argv: list[str] | None = None) -> int:
         with open(seq_txt, "w") as fh:
             for st in steps:
                 fh.write(f"=== Step {st['step']} (day +{st['send_day']})\nSubject: {st['subject']}\n\n{st['body']}\n\n")
-        print(f"{len(leads)} cleared leads -> {leads_path} (excluded {len(report.excluded)})")
+        print(f"{len(leads)} leads -> {leads_path} (excluded {len(report.excluded)})")
+        if external:
+            print("NOT SCRUBBED: run the DNC and litigator check on this file before importing it into Instantly.")
         print(f"Sequence -> {seq_csv} and {seq_txt}. Import both into your cold email tool; nothing was sent.")
         return 0
 

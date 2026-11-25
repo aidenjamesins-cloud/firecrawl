@@ -75,3 +75,11 @@ def test_external_cleared_list(tmp_path):
     f = F([ClearedListProvider(str(cleared))])
     assert f.reason_to_exclude(P()) is None
     assert f.reason_to_exclude(P(email="other@spa.com", phone="5125550199")) == "DNC status unknown"
+
+
+def test_external_scrub_mode_skips_dnc_but_keeps_other_checks():
+    f = ComplianceFilter([], set(), ["TX"], True, external_scrub=True)
+    assert f.reason_to_exclude(P(phone="")) is None
+    assert "not licensed" in f.reason_to_exclude(P(state="CA"))
+    f2 = ComplianceFilter([], {"owner@spa.com"}, ["TX"], True, external_scrub=True)
+    assert f2.reason_to_exclude(P()) == "suppression list"

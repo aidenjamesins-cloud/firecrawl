@@ -40,6 +40,12 @@ python -m pytest tests
 
 ## Compliance filter (fails closed)
 
+**`DNC_SCRUB=external` (James Insurance Advisory's setup):** your team runs the DNC and
+litigator check on the exported file before importing it into Instantly. The export is
+named `cold_leads_<niche>_NOT_SCRUBBED.csv` as a reminder. The suppression list and
+licensed-state checks below still run. With `DNC_SCRUB=internal` the tool clears every
+record itself, as described next.
+
 A prospect is kept only if every check passes. Anything unknown is excluded.
 
 * Not on the suppression list (exact email or a whole `@domain`).

@@ -127,7 +127,10 @@ class FilterReport:
 
 class ComplianceFilter:
     def __init__(self, providers: list[ScrubProvider], suppression: set[str],
-                 licensed_states: list[str], require_phone: bool = True):
+                 licensed_states: list[str], require_phone: bool = True, external_scrub: bool = False):
+        # external_scrub=True: DNC and litigator checks are done by the operator's team on
+        # the exported file before import. Suppression and licensed-state checks still run.
+        self.external_scrub = external_scrub
         self.providers = providers
         self.suppression = {s.lower() for s in suppression}
         self.licensed_states = {s.upper() for s in licensed_states}
@@ -143,7 +146,7 @@ class ComplianceFilter:
         if s.scrub_api_url:
             providers.append(HttpScrubProvider(s.scrub_api_url, s.scrub_api_key))
         return cls(providers, _read_values(s.suppression_csv_path), s.licensed_states,
-                   s.require_phone_for_dnc_check)
+                   s.require_phone_for_dnc_check, external_scrub=s.dnc_scrub == "external")
 
     def reason_to_exclude(self, p: Prospect) -> str | None:
         email = p.email.lower()
@@ -154,6 +157,8 @@ class ComplianceFilter:
             return "no licensed states configured"
         if p.state.upper() not in self.licensed_states:
             return f"not licensed in {p.state or 'unknown state'}"
+        if self.external_scrub:
+            return None
         if not self.providers:
             return "no DNC/litigator scrub source configured"
         phone = normalize_phone(p.phone)

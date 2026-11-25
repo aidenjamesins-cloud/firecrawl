@@ -36,6 +36,7 @@ class Settings:
     scrub_api_url: str = ""
     scrub_api_key: str = ""
     require_phone_for_dnc_check: bool = True
+    dnc_scrub: str = "internal"  # "internal" or "external" (done by your team after export)
     agency_name: str = "[AMERISTEAD AGENCY LEGAL NAME]"
     agency_address: str = "[PHYSICAL MAILING ADDRESS]"
     agent_license_line: str = "[AGENT NAME], licensed in [STATES], License # [NUMBER]"
@@ -61,6 +62,7 @@ class Settings:
             suppression_csv_path=_env("SUPPRESSION_CSV_PATH"),
             scrub_api_url=_env("SCRUB_API_URL"),
             scrub_api_key=_env("SCRUB_API_KEY"),
+            dnc_scrub="external" if _env("DNC_SCRUB", "internal").lower() == "external" else "internal",
             require_phone_for_dnc_check=_env("REQUIRE_PHONE_FOR_DNC_CHECK", "true").lower() != "false",
             agency_name=_env("AGENCY_NAME", d.agency_name),
             agency_address=_env("AGENCY_ADDRESS", d.agency_address),
