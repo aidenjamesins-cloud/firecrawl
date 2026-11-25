@@ -161,6 +161,9 @@ def main(argv: list[str] | None = None) -> int:
             print("Fill these before creating drafts (or pass --allow-placeholders for a test draft):")
             print("  " + "\n  ".join(leftovers))
             return 2
+        if "@" not in s.reply_to:
+            print("Set MAILCHIMP_REPLY_TO to the sending address before creating Mailchimp drafts.")
+            return 2
         # Re-run the compliance filter here so a stale or hand-edited CSV can't bypass it.
         report = ComplianceFilter.from_settings(s).run(read_csv(a.inp))
         prospects = [p for p in report.kept if p.niche == a.niche]
