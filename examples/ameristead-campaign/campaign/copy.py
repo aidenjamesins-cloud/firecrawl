@@ -190,3 +190,39 @@ def build_sequence(niche: str, pain_points: list[dict], s: Settings, plans: dict
 
 def unfilled_tokens(text: str) -> list[str]:
     return sorted(set(re.findall(r"\[[A-Z][^\]]*\]", text)))
+
+
+# ---- cold email export ----------------------------------------------------
+# Most cold outreach tools (Instantly, Smartlead, lemlist, Apollo) use {{double-brace}}
+# variables from the uploaded CSV columns. Adjust these if your tool differs.
+COLD_TOKENS = {
+    "*|FNAME|*": "{{first_name}}",
+    "*|BIZ|*": "{{company_name}}",
+}
+COLD_OPT_OUT = "Not interested? Reply \"unsubscribe\" and you will not hear from me again."
+
+
+def to_plain_text(body_html: str) -> str:
+    text = body_html.replace('<a href="*|UNSUB|*">Unsubscribe</a> and you will not hear from us again.', COLD_OPT_OUT)
+    text = re.sub(r'<a href="([^"]+)">([^<]+)</a>', r"\2: \1", text)
+    text = re.sub(r"</tr>", "\n", text)
+    text = re.sub(r"</t[dh]>", " | ", text)
+    text = re.sub(r"<br\s*/?>", "\n", text)
+    text = re.sub(r"</p>|<hr>", "\n\n", text)
+    text = html.unescape(re.sub(r"<[^>]+>", "", text))
+    for mc, cold in COLD_TOKENS.items():
+        text = text.replace(mc, cold)
+    return re.sub(r"\n{3,}", "\n\n", re.sub(r"[ \t]+\n", "\n", text)).strip()
+
+
+def cold_sequence(niche: str, pain_points: list[dict], s: Settings, plans: dict | None = None) -> list[dict]:
+    """Plain-text steps for a cold tool. The plan comparison table is dropped (plain text
+    tables read poorly and heavy formatting hurts cold deliverability)."""
+    out = []
+    for e in build_sequence(niche, pain_points, s, plans):
+        body = re.sub(r"<p>Here is how the tiers compare in-network:</p><table.*?</table>", "", e.body_html, flags=re.S)
+        subject = e.subject
+        for mc, cold in COLD_TOKENS.items():
+            subject = subject.replace(mc, cold)
+        out.append({"step": e.step, "send_day": e.send_day, "subject": subject, "body": to_plain_text(body)})
+    return out

@@ -6,10 +6,16 @@ drip as **Mailchimp drafts**. Nothing is ever sent by this code.
 
 ```
 trends ──► pain_points.json ─┐
-scrape ──► prospects.csv ──► filter ──► clean.csv ──► draft ──► Mailchimp drafts (a person sends)
-                                │
-                                └──► excluded.csv (with the reason for each exclusion)
+scrape ──► prospects.csv ──► filter ──► clean.csv ──► export-cold ──► cold email tool (separate domain)
+                                │                                          │
+                                └──► excluded.csv                 replies / opt-ins only
+                                                                           ▼
+                                               engaged.csv ──► draft ──► Mailchimp drafts (a person sends)
 ```
+
+Scraped prospects never go into Mailchimp. First touches go out from a cold outreach
+tool on a separate sending domain. Only people who reply with interest or opt in are
+exported from that tool into `engaged_<niche>.csv` and moved to Mailchimp.
 
 ## Setup
 
@@ -28,8 +34,9 @@ python -m pytest tests
 | 2 | `python -m campaign.cli scrape --niche cpa --locations "Austin,TX;Houston,TX" --out data/prospects_cpa.csv` | Searches for businesses per niche and city, skips LinkedIn, Yelp, Zillow and other sites whose terms forbid scraping, and extracts only emails published on the business's own site. Niches: `med_spa`, `cpa`, `financial_advisor`, `real_estate`, `dental_practice`, `law_firm`. |
 | 3 | `python -m campaign.cli filter --in data/prospects_cpa.csv --out data/clean_cpa.csv` | Compliance filter (below). |
 | 4 | `python -m campaign.cli preview --niche cpa` | Writes the 4 emails to `out/` for review and lists any unfilled `[PLACEHOLDERS]`. |
-| 5 | `python -m campaign.cli sync-suppression` | Pulls Mailchimp unsubscribes and cleaned addresses into the suppression list. Run before every upload. |
-| 6 | `python -m campaign.cli draft --in data/clean_cpa.csv --niche cpa --confirm-permission` | Re-runs the filter, uploads contacts, creates a niche segment and 4 draft campaigns titled with their send day (+0, +3, +7, +12). Refuses while placeholders remain. |
+| 5 | `python -m campaign.cli export-cold --in data/clean_cpa.csv --niche cpa` | Re-runs the filter and writes `out/cold_leads_cpa.csv` (email, first_name, last_name, company_name, …) plus the 4-step plain-text sequence as CSV and TXT for your cold email tool. Uses `{{first_name}}` and `{{company_name}}` variables (edit `COLD_TOKENS` in `copy.py` if your tool differs). Each email keeps the ad disclosure, physical address and a reply-to-unsubscribe line. Refuses while placeholders remain. Nothing is sent. |
+| 6 | `python -m campaign.cli sync-suppression --from-csv unsubscribes.csv` | Merges opt-outs and bounces exported from the cold tool, plus Mailchimp unsubscribes, into the suppression list. Run before every export and upload (`--skip-mailchimp` if Mailchimp is not set up yet). |
+| 7 | `python -m campaign.cli draft --in data/engaged_cpa.csv --niche cpa --engaged-only-confirmed --confirm-permission` | For repliers and opt-ins only. Re-runs the filter, uploads them, creates a niche segment and 4 draft campaigns titled with their send day (+0, +3, +7, +12). Refuses while placeholders remain. |
 
 ## Compliance filter (fails closed)
 
@@ -55,10 +62,10 @@ Premiums from the flyer are only shown when `INCLUDE_PREMIUMS=true`.
 ## Before anything is sent
 
 * **Mailchimp list policy.** Mailchimp's Acceptable Use Policy does not allow emailing
-  purchased, rented or scraped contacts who have not opted in, and accounts get suspended
-  for it. `--confirm-permission` is required to upload so this is a deliberate decision.
-  A common alternative: send first touches from a cold outreach tool on a separate domain,
-  and move people who reply or opt in to Mailchimp.
+  scraped contacts who have not opted in. That is why first touches go through the cold
+  tool, and `draft` requires both `--engaged-only-confirmed` and `--confirm-permission`.
+* **Cold sending domain.** Use a separate domain from your main one, warm it up, and keep
+  daily volume modest so your primary domain's reputation is protected.
 * **CAN-SPAM.** Every email carries an ad disclosure, the physical address, a working
   unsubscribe link, and an honest subject line. Honor opt-outs within 10 business days
   (`sync-suppression` handles Mailchimp opt-outs).
