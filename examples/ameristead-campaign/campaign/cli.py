@@ -113,9 +113,10 @@ def main(argv: list[str] | None = None) -> int:
         leads_path = os.path.join(a.out_dir, f"cold_leads_{a.niche}.csv")
         with open(leads_path, "w", newline="") as fh:
             w = csv.writer(fh)
-            w.writerow(["email", "first_name", "last_name", "company_name", "niche", "city", "state", "website"])
+            # Headers Instantly's lead import recognizes; the rest become custom variables.
+            w.writerow(["Email", "First Name", "Last Name", "Company Name", "Website", "niche", "city", "state"])
             for p in leads:
-                w.writerow([p.email, p.first_name, p.last_name, p.business_name, p.niche, p.city, p.state, p.source_url])
+                w.writerow([p.email, p.first_name, p.last_name, p.business_name, p.source_url, p.niche, p.city, p.state])
         seq_csv = os.path.join(a.out_dir, f"cold_sequence_{a.niche}.csv")
         with open(seq_csv, "w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=["step", "send_day", "subject", "body"])

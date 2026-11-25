@@ -14,7 +14,7 @@ def test_cold_sequence_is_plain_text_with_opt_out():
         assert "<" not in st["body"] and "*|" not in st["body"]
         assert 'Reply "unsubscribe"' in st["body"]
         assert "advertisement" in st["body"]
-    assert "{{first_name}}" in steps[0]["body"] and "{{company_name}}" in steps[0]["body"]
+    assert "{{firstName}}" in steps[0]["body"] and "{{companyName}}" in steps[0]["body"]
 
 
 def _write_prospects(path):
@@ -35,7 +35,7 @@ def test_export_cold_reruns_compliance_filter(tmp_path, monkeypatch):
     rc = cli.main(["export-cold", "--in", str(inp), "--niche", "cpa", "--out-dir", str(tmp_path), "--allow-placeholders"])
     assert rc == 0
     rows = list(csv.DictReader(open(tmp_path / "cold_leads_cpa.csv")))
-    assert [r["email"] for r in rows] == ["ok@cpa.com"]
+    assert [r["Email"] for r in rows] == ["ok@cpa.com"]
     assert len(list(csv.DictReader(open(tmp_path / "cold_sequence_cpa.csv")))) == 4
 
 
