@@ -39,7 +39,8 @@ def test_export_cold_reruns_compliance_filter(tmp_path, monkeypatch):
     assert len(list(csv.DictReader(open(tmp_path / "cold_sequence_cpa.csv")))) == 4
 
 
-def test_export_cold_blocks_placeholders(tmp_path):
+def test_export_cold_blocks_placeholders(tmp_path, monkeypatch):
+    monkeypatch.setenv("BROCHURE_URL", "[FLYER LINK]")
     inp = tmp_path / "p.csv"; _write_prospects(inp)
     assert cli.main(["export-cold", "--in", str(inp), "--niche", "cpa", "--out-dir", str(tmp_path)]) == 2
 

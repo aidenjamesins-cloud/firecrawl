@@ -110,6 +110,8 @@ def main(argv: list[str] | None = None) -> int:
         report = ComplianceFilter.from_settings(s).run(read_csv(a.inp))
         leads = [p for p in report.kept if p.niche == a.niche]
         os.makedirs(a.out_dir, exist_ok=True)
+        if not s.agency_address:
+            print("Note: AGENCY_ADDRESS is empty, so emails have no postal address in the footer.")
         external = s.dnc_scrub == "external"
         suffix = "_NOT_SCRUBBED" if external else ""
         leads_path = os.path.join(a.out_dir, f"cold_leads_{a.niche}{suffix}.csv")

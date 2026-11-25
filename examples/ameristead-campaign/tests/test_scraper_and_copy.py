@@ -52,5 +52,5 @@ def test_sequence_uses_plan_facts_and_compliance_footer():
     assert "$426" not in allhtml  # premiums hidden by default
     s.include_premiums = True
     assert "$426" in "".join(e.body_html for e in build_sequence("cpa", pains, s))
-    assert "[PHYSICAL MAILING ADDRESS]" in unfilled_tokens(allhtml)
+    assert unfilled_tokens(allhtml) == []
     assert len(plans["plans"]) == 7

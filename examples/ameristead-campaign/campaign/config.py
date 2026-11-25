@@ -39,10 +39,10 @@ class Settings:
     dnc_scrub: str = "internal"  # "internal" or "external" (done by your team after export)
     agency_name: str = "James Insurance Advisory"
     carrier_disclaimer: str = ""
-    agency_address: str = "[PHYSICAL MAILING ADDRESS]"
+    agency_address: str = ""
     agent_license_line: str = ""
     licensed_states: list[str] = field(default_factory=list)
-    brochure_url: str = "[BROCHURE PDF LINK]"
+    brochure_url: str = ""
     booking_url: str = "https://calendly.com/aidenjameshealth/free-health-coverage-consultation-clone-1"
     include_premiums: bool = False
 
