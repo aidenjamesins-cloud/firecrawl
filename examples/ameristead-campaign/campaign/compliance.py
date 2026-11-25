@@ -74,6 +74,24 @@ class CsvListProvider(ScrubProvider):
         return ScrubResult(dnc=dnc, litigator=lit, source=self.name)
 
 
+class ClearedListProvider(ScrubProvider):
+    """For a DNC and litigator scrub done outside this tool.
+
+    Send the scraped prospects CSV through your scrub process and save the records that
+    came back CLEAR of both DNC and litigator lists (any CSV with an email and/or phone
+    column). Only those are cleared; anyone missing from the file stays excluded.
+    """
+    name = "external scrub"
+
+    def __init__(self, cleared_path: str):
+        self.cleared = _read_values(cleared_path)
+
+    def check(self, phone: str, email: str) -> ScrubResult:
+        if email.lower() in self.cleared or (phone and phone in self.cleared):
+            return ScrubResult(dnc=False, litigator=False, source=self.name)
+        return ScrubResult(source=self.name)
+
+
 class HttpScrubProvider(ScrubProvider):
     """Generic vendor API. Expects POST {phone, email} -> {"dnc": bool, "litigator": bool}.
 
@@ -109,7 +127,10 @@ class FilterReport:
 
 class ComplianceFilter:
     def __init__(self, providers: list[ScrubProvider], suppression: set[str],
-                 licensed_states: list[str], require_phone: bool = True):
+                 licensed_states: list[str], require_phone: bool = True, external_scrub: bool = False):
+        # external_scrub=True: DNC and litigator checks are done by the operator's team on
+        # the exported file before import. Suppression and licensed-state checks still run.
+        self.external_scrub = external_scrub
         self.providers = providers
         self.suppression = {s.lower() for s in suppression}
         self.licensed_states = {s.upper() for s in licensed_states}
@@ -118,12 +139,14 @@ class ComplianceFilter:
     @classmethod
     def from_settings(cls, s: Settings) -> "ComplianceFilter":
         providers: list[ScrubProvider] = []
+        if s.scrub_cleared_csv_path:
+            providers.append(ClearedListProvider(s.scrub_cleared_csv_path))
         if s.dnc_csv_path or s.litigator_csv_path:
             providers.append(CsvListProvider(s.dnc_csv_path, s.litigator_csv_path))
         if s.scrub_api_url:
             providers.append(HttpScrubProvider(s.scrub_api_url, s.scrub_api_key))
         return cls(providers, _read_values(s.suppression_csv_path), s.licensed_states,
-                   s.require_phone_for_dnc_check)
+                   s.require_phone_for_dnc_check, external_scrub=s.dnc_scrub == "external")
 
     def reason_to_exclude(self, p: Prospect) -> str | None:
         email = p.email.lower()
@@ -134,6 +157,8 @@ class ComplianceFilter:
             return "no licensed states configured"
         if p.state.upper() not in self.licensed_states:
             return f"not licensed in {p.state or 'unknown state'}"
+        if self.external_scrub:
+            return None
         if not self.providers:
             return "no DNC/litigator scrub source configured"
         phone = normalize_phone(p.phone)

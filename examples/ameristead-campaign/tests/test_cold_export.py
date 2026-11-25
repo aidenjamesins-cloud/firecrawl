@@ -55,3 +55,12 @@ def test_sync_suppression_from_cold_tool_csv(tmp_path, monkeypatch):
 def test_draft_requires_engaged_confirmation(tmp_path):
     inp = tmp_path / "p.csv"; _write_prospects(inp)
     assert cli.main(["draft", "--in", str(inp), "--niche", "cpa", "--confirm-permission"]) == 2
+
+
+def test_external_mode_names_file_not_scrubbed(tmp_path, monkeypatch):
+    inp = tmp_path / "p.csv"; _write_prospects(inp)
+    for k, v in {"DNC_SCRUB": "external", "LICENSED_STATES": "TX", "SUPPRESSION_CSV_PATH": str(tmp_path / "s.csv")}.items():
+        monkeypatch.setenv(k, v)
+    assert cli.main(["export-cold", "--in", str(inp), "--niche", "cpa", "--out-dir", str(tmp_path), "--allow-placeholders"]) == 0
+    rows = list(csv.DictReader(open(tmp_path / "cold_leads_cpa_NOT_SCRUBBED.csv")))
+    assert len(rows) == 2

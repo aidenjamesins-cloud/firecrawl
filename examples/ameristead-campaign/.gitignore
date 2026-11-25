@@ -9,3 +9,4 @@ data/dnc*.csv
 data/litigator*.csv
 __pycache__/
 .pytest_cache/
+data/scrub_cleared*.csv

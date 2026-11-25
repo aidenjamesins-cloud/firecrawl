@@ -40,12 +40,21 @@ python -m pytest tests
 
 ## Compliance filter (fails closed)
 
+**`DNC_SCRUB=external` (James Insurance Advisory's setup):** your team runs the DNC and
+litigator check on the exported file before importing it into Instantly. The export is
+named `cold_leads_<niche>_NOT_SCRUBBED.csv` as a reminder. The suppression list and
+licensed-state checks below still run. With `DNC_SCRUB=internal` the tool clears every
+record itself, as described next.
+
 A prospect is kept only if every check passes. Anything unknown is excluded.
 
 * Not on the suppression list (exact email or a whole `@domain`).
 * In a state listed in `LICENSED_STATES`.
 * At least one scrub source is configured, and it returns a definite "clear" for **both**
   federal DNC and known TCPA litigator status. Sources are pluggable (`ScrubProvider`):
+  * `ClearedListProvider` (`SCRUB_CLEARED_CSV_PATH`): for a scrub done outside this tool.
+    Run the scraped prospects CSV through your DNC and litigator scrub, then save only the
+    records that came back clear. Anyone not in that file is excluded.
   * `CsvListProvider`: your FTC DNC subscription download (phones) and a litigator list from your vendor (phones and/or emails).
   * `HttpScrubProvider`: any vendor API; adapt `parse()` to its response.
 * Has a phone number to check against DNC (set `REQUIRE_PHONE_FOR_DNC_CHECK=false` to allow email-only records; they still need a litigator clear).
