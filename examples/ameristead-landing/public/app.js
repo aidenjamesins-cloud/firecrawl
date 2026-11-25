@@ -21,9 +21,21 @@
   if (C.logoUrl) { var b = $("[data-brand]"); b.innerHTML = '<img alt="">'; b.firstChild.src = C.logoUrl; b.firstChild.alt = C.agencyName || ""; }
   var initials = (C.advisorName && C.advisorName.charAt(0) !== "[" ? C.advisorName : (C.agencyName || "")).split(/\s+/).map(function (w) { return w.charAt(0); }).join("").slice(0, 3);
   $$("[data-initials]").forEach(function (el) { el.textContent = initials; });
+  if (C.advisorPhoto) $$("[data-advisor-photo]").forEach(function (el) { var im = document.createElement("img"); im.src = C.advisorPhoto; im.alt = C.advisorName || ""; el.replaceChildren(im); });
+  var reviews = (C.testimonials || []).filter(function (t) { return t && t.quote && t.name; });
+  if (reviews.length) {
+    $("#reviews").hidden = false;
+    $("#review-list").replaceChildren.apply($("#review-list"), reviews.map(function (t) {
+      var fig = document.createElement("figure"); fig.className = "review";
+      if (t.stars) { var st = document.createElement("p"); st.className = "stars"; st.textContent = "\u2605".repeat(Math.max(0, Math.min(5, t.stars))); st.setAttribute("aria-label", t.stars + " out of 5 stars"); fig.appendChild(st); }
+      var bq = document.createElement("blockquote"); bq.textContent = t.quote; fig.appendChild(bq);
+      var fc = document.createElement("figcaption"); fc.textContent = t.name + (t.detail ? ", " + t.detail : ""); fig.appendChild(fc);
+      return fig;
+    }));
+  }
   if (C.phone) {
     var tel = "tel:" + C.phone.replace(/[^\d+]/g, "");
-    $$("[data-phone]").forEach(function (a) { a.hidden = false; a.href = tel; if (!a.classList.contains("sticky-call")) a.textContent = C.phone; });
+    $$("[data-phone]").forEach(function (a) { a.hidden = false; a.href = tel; var n = $(".call-num", a); if (n) n.textContent = C.phone; });
   }
   if (C.calendarUrl) {
     $$("[data-calendar]").forEach(function (a) { a.href = C.calendarUrl; a.target = "_blank"; a.rel = "noopener"; });
@@ -84,8 +96,11 @@
   var premRows = [["Employee only", "employee"], ["Employee + spouse", "employee_spouse"], ["Employee + children", "employee_children"], ["Family", "family"]];
   var head = $("#pt-head"), body = $("#pt-body"), famTabs = $$("[data-family]");
   function cell(tag, text) { var c = document.createElement(tag); c.textContent = text; return c; }
+  var curFamily = "ameristead", curType = "all";
   function renderTable(key) {
-    var fam = FAMILIES.filter(function (f) { return f.key === key; })[0] || FAMILIES[0];
+    curFamily = key || curFamily;
+    var famAll = FAMILIES.filter(function (f) { return f.key === curFamily; })[0] || FAMILIES[0];
+    var fam = { key: famAll.key, plans: famAll.plans.filter(function (p) { return curType === "all" || (curType === "hsa" ? p.hsa : !p.hsa); }) };
     var hr = document.createElement("tr"); var h0 = cell("th", "Plan"); h0.scope = "col"; hr.appendChild(h0);
     fam.plans.forEach(function (p) {
       var th = cell("th", p.name); th.scope = "col";
@@ -105,6 +120,7 @@
     $$("[data-family-note]").forEach(function (n) { n.hidden = n.getAttribute("data-family-note") !== fam.key; });
   }
   famTabs.forEach(function (t) { t.addEventListener("click", function () { renderTable(t.getAttribute("data-family")); }); });
+  $$("input[name=ptype]").forEach(function (r) { r.addEventListener("change", function () { curType = r.value; renderTable(); }); });
   renderTable("ameristead");
   slider.addEventListener("input", function () { showPlan(+slider.value); });
   showPlan(+slider.value);
@@ -150,8 +166,22 @@
 
   /* ---------- States ---------- */
   var STATES = "AL,AK,AZ,AR,CA,CO,CT,DE,DC,FL,GA,HI,ID,IL,IN,IA,KS,KY,LA,ME,MD,MA,MI,MN,MS,MO,MT,NE,NV,NH,NJ,NM,NY,NC,ND,OH,OK,OR,PA,RI,SC,SD,TN,TX,UT,VT,VA,WA,WV,WI,WY".split(",");
-  var ss = $("#state-select");
-  STATES.forEach(function (s) { var o = document.createElement("option"); o.value = o.textContent = s; ss.appendChild(o); });
+  $$("[data-states]").forEach(function (ss) { STATES.forEach(function (s) { var o = document.createElement("option"); o.value = o.textContent = s; ss.appendChild(o); }); });
+
+  /* ---------- Hero quote start: first two answers, then the rest of the form ---------- */
+  var hs = $("#hero-start");
+  hs.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var who = $("input[name=employees]:checked", hs), st = hs.elements.state;
+    $(".chips", hs).classList.toggle("is-invalid", !who);
+    if (!who) { $("input[name=employees]", hs).focus(); return; }
+    if (invalid(st, !st.value)) { st.focus(); return; }
+    var qf0 = $("#quote-form").elements;
+    qf0.employees.value = who.value;
+    qf0.state.value = hs.elements.state.value;
+    $("#quote").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    setTimeout(function () { qf0.businessType.focus({ preventScroll: true }); }, 400);
+  });
 
   /* ---------- Submitting ---------- */
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -228,6 +258,7 @@
   }
   function openModal() {
     if (!modal.hidden) return;
+    var bn = $("#guide-banner"); if (bn) bn.hidden = true;
     popupShown = true;
     lastFocus = document.activeElement;
     modal.hidden = false; document.body.classList.add("modal-open");
@@ -250,16 +281,35 @@
     else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
   });
 
-  // Auto-open: after a delay AND some scrolling, or on exit intent (desktop). Never on load.
+  // Guide preview inside the pop-up: real rows from the plan data.
+  (function () {
+    var t = $("#guide-preview"); if (!t) return;
+    var pick = ["Diamond", "Copay 1250", "HSA 5500"].map(function (n) { return all.filter(function (p) { return p.name === n; })[0]; }).filter(Boolean);
+    var hr = document.createElement("tr"); hr.appendChild(cell("th", "")); pick.forEach(function (p) { hr.appendChild(cell("th", p.name)); });
+    var rws = [["Deductible", function (p) { return String(p.deductible).split("/")[0]; }], ["Primary care", function (p) { return p.primary_care.replace(" after deductible", " after ded."); }], ["Out-of-pocket max", function (p) { return String(p.max_oop).split("/")[0]; }]];
+    var thead = document.createElement("thead"); thead.appendChild(hr);
+    var tb = document.createElement("tbody");
+    rws.forEach(function (r) { var tr = document.createElement("tr"); tr.appendChild(cell("th", r[0])); pick.forEach(function (p) { tr.appendChild(cell("td", r[1](p))); }); tb.appendChild(tr); });
+    t.replaceChildren(thead, tb);
+  })();
+
+  // Desktop: auto-open after a delay AND some scrolling, or on exit intent. Never on load.
+  // Phones: no automatic overlay (Google penalizes intrusive mobile interstitials); show a small banner instead.
+  var isPhone = matchMedia("(max-width: 640px)").matches;
+  var banner = $("#guide-banner");
+  $$("[data-banner-close]").forEach(function (b) { b.addEventListener("click", function () { banner.hidden = true; store.set(SNOOZE, String(Date.now() + (inc.snoozeDays || 7) * 864e5)); }); });
   var timeOk = false, scrollOk = false;
-  function maybeAuto() { if (!popupShown && timeOk && scrollOk && canAuto() && !quoteVisible) openModal(); }
+  function maybeAuto() {
+    if (popupShown || !timeOk || !scrollOk || !canAuto() || quoteVisible) return;
+    if (isPhone) { banner.hidden = false; popupShown = true; } else openModal();
+  }
   setTimeout(function () { timeOk = true; maybeAuto(); }, (inc.delaySeconds || 12) * 1000);
   window.addEventListener("scroll", function () {
     var max = document.documentElement.scrollHeight - innerHeight;
     if (max > 0 && scrollY / max * 100 >= (inc.scrollPercent || 35)) { scrollOk = true; maybeAuto(); }
   }, { passive: true });
   document.addEventListener("mouseout", function (e) {
-    if (!e.relatedTarget && e.clientY <= 0 && timeOk && !popupShown && canAuto()) openModal();
+    if (!isPhone && !e.relatedTarget && e.clientY <= 0 && timeOk && !popupShown && canAuto()) openModal();
   });
 
   gf.addEventListener("submit", function (e) {

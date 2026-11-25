@@ -19,7 +19,6 @@
 <header class="top" id="top">
   <div class="wrap top-row">
     <a class="brand" href="#top" data-brand>
-      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2Z" fill="currentColor"/><path d="M11 16.5 14.5 20 21.5 12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span data-cfg="agencyName">James Insurance Advisory</span>
     </a>
     <nav class="top-nav" aria-label="Sections">
@@ -28,7 +27,7 @@
       <a href="#faq">Questions</a>
     </nav>
     <div class="top-actions">
-      <a class="call" data-phone hidden></a>
+      <a class="call" data-phone hidden><span class="call-label">Talk to a licensed agent</span><span class="call-num"></span></a>
       <a class="btn btn-small" href="#quote">Get a free quote</a>
     </div>
   </div>
@@ -40,17 +39,27 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <h1>Health coverage that works as hard as you do.</h1>
-      <p class="lede">Cigna PPO plans for business owners, their teams and the self-employed. Fifteen plan designs from two plan families, Ameristead Health and Bright Life: copay, major medical and HSA-eligible, from a $0 deductible up. Every one includes $0 in-network preventive care.</p>
-      <div class="hero-ctas">
-        <a class="btn" href="#quote">Get my free quote</a>
-        <button class="btn btn-ghost" type="button" data-open-guide>Get the plan comparison guide</button>
-      </div>
-      <ul class="hero-facts">
-        <li>No referral needed to see a specialist</li>
-        <li>Plans for a team of one to 99</li>
-        <li>One licensed advisor from quote to enrollment</li>
-      </ul>
+      <h1>Cigna PPO health plans for business owners and the self-employed.</h1>
+      <p class="lede">Compare 15 plans for you and your team, from a $0 deductible to HSA-eligible. A licensed agent does the shopping for you, at no cost.</p>
+      <form class="hero-start" id="hero-start" novalidate>
+        <p class="hero-start-q" id="hs-q">Start your free quote</p>
+        <div class="hero-start-row" role="group" aria-labelledby="hs-q">
+          <fieldset class="chips">
+            <legend>Who needs coverage?</legend>
+            <label><input type="radio" name="employees" value="Just me"><span>Just me</span></label>
+            <label><input type="radio" name="employees" value="2 to 9"><span>Team of 2 to 9</span></label>
+            <label><input type="radio" name="employees" value="10 to 24"><span>10 to 24</span></label>
+            <label><input type="radio" name="employees" value="25 to 49"><span>25 to 49</span></label>
+            <label><input type="radio" name="employees" value="50 to 99"><span>50 to 99</span></label>
+          </fieldset>
+          <label class="hs-state">State
+            <select name="state" required data-states><option value="">Choose</option></select>
+          </label>
+          <button class="btn" type="submit">See my options</button>
+        </div>
+        <p class="hero-start-note">Free and no obligation. About 2 minutes. No referral needed to see specialists on any plan.</p>
+      </form>
+      <button class="text-btn" type="button" data-open-guide>Not ready yet? Get the free plan comparison guide</button>
     </div>
 
     <div class="plan-card-wrap">
@@ -79,6 +88,15 @@
         <div class="slider-ends" aria-hidden="true"><span>Higher deductible</span><span>Lower deductible</span></div>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="facts" aria-label="At a glance">
+  <div class="wrap facts-row">
+    <p><strong>Cigna PPO</strong> network on every plan</p>
+    <p><strong>15 plans</strong> from Ameristead Health and Bright Life</p>
+    <p><strong>$0</strong> in-network preventive care</p>
+    <p><strong>Licensed agent</strong> <span data-cfg="licensedStatesShort">in [STATES]</span></p>
   </div>
 </section>
 
@@ -150,6 +168,12 @@
       <button role="tab" aria-selected="true" data-family="ameristead">Ameristead Health <span>7 plans</span></button>
       <button role="tab" aria-selected="false" data-family="brightlife">Bright Life <span>8 plans</span></button>
     </div>
+    <div class="type-filter" role="radiogroup" aria-label="Plan type">
+      <span class="type-label" id="type-label">Show</span>
+      <label><input type="radio" name="ptype" value="all" checked> All</label>
+      <label><input type="radio" name="ptype" value="copay"> Copay and major medical</label>
+      <label><input type="radio" name="ptype" value="hsa"> HSA-eligible</label>
+    </div>
     <div class="table-scroll" tabindex="0" aria-label="Plan comparison table, scrolls sideways">
       <table class="plan-table">
         <thead><tr id="pt-head"><th scope="col">Plan</th></tr></thead>
@@ -177,6 +201,14 @@
   </div>
 </section>
 
+<!-- Real client reviews only (config.testimonials). Hidden when empty. -->
+<section class="reviews" id="reviews" hidden>
+  <div class="wrap">
+    <h2>What clients say.</h2>
+    <div class="review-list" id="review-list"></div>
+  </div>
+</section>
+
 <!-- Quote form -->
 <section class="quote" id="quote">
   <div class="wrap quote-grid">
@@ -184,10 +216,11 @@
       <h2>Get your free quote.</h2>
       <p>No cost and no obligation. A licensed advisor reviews your answers and follows up with the plans that fit.</p>
       <div class="advisor">
-        <div class="advisor-avatar" aria-hidden="true" data-initials>JIA</div>
+        <div class="advisor-photo" data-advisor-photo><span data-initials>JIA</span></div>
         <div>
           <p class="advisor-name" data-cfg="advisorName">[ADVISOR NAME]</p>
-          <p class="advisor-title" data-cfg="advisorTitle">Licensed health insurance agent</p>
+          <p class="advisor-title"><span data-cfg="advisorTitle">Licensed health insurance agent</span>, NPN <span data-cfg="npn">[NPN]</span></p>
+          <p class="advisor-bio" data-cfg="advisorBio">[One or two sentences about you: years in insurance, who you help, where you're based.]</p>
         </div>
       </div>
       <a class="btn btn-ghost" data-calendar href="#quote">Book a 15-minute call instead</a>
@@ -223,7 +256,7 @@
           </select>
         </label>
         <label>State
-          <select name="state" required id="state-select"><option value="">Choose a state</option></select>
+          <select name="state" required id="state-select" data-states><option value="">Choose a state</option></select>
         </label>
         <button class="btn btn-block" type="button" id="q-next">Continue</button>
       </fieldset>
@@ -255,7 +288,12 @@
       <p class="form-error" role="alert" id="q-error" hidden></p>
       <div class="form-done" id="q-done" hidden tabindex="-1">
         <h3>Quote requested.</h3>
-        <p>A licensed advisor will review your answers and reach out to you directly.</p>
+        <p>Here's what happens next:</p>
+        <ol class="next-steps">
+          <li>A licensed agent reviews your answers and prices the plans that fit.</li>
+          <li>We reach out by email, or by phone if you gave us a number, to walk you through the options.</li>
+          <li>You choose. There's no cost and no obligation.</li>
+        </ol>
         <a class="btn" data-calendar href="#quote">Book a time now</a>
       </div>
     </form>
@@ -308,7 +346,15 @@
 <!-- Sticky bar on phones -->
 <div class="sticky-cta" id="sticky-cta" aria-hidden="true">
   <a class="btn btn-block" href="#quote" tabindex="-1">Get my free quote</a>
-  <a class="sticky-call" data-phone hidden tabindex="-1" aria-label="Call us">Call</a>
+  <a class="sticky-call" data-phone hidden tabindex="-1" aria-label="Call a licensed agent">Call an agent</a>
+</div>
+
+<!-- Phone: small banner instead of an automatic full-screen pop-up -->
+<div class="guide-banner" id="guide-banner" hidden>
+  <button type="button" class="guide-banner-open" data-open-guide>Free: compare all 15 Cigna PPO plans in one guide</button>
+  <button type="button" class="guide-banner-x" aria-label="Dismiss" data-banner-close>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
 </div>
 
 <!-- Lead magnet pop-up -->
@@ -319,10 +365,9 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     </button>
     <div class="modal-art" aria-hidden="true">
-      <div class="mini-guide">
-        <span class="mg-tag">Free guide</span>
-        <span class="mg-row"><b></b><i></i></span><span class="mg-row"><b></b><i></i></span><span class="mg-row"><b></b><i></i></span><span class="mg-row"><b></b><i></i></span>
-      </div>
+      <p class="preview-label">A preview of page 1</p>
+      <table class="preview-table" id="guide-preview"></table>
+      <p class="preview-more">+ 12 more plans and a 5-question checklist</p>
     </div>
     <div class="modal-body">
       <form id="guide-form" novalidate>
